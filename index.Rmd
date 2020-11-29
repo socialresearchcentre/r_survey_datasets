@@ -1,0 +1,115 @@
+--- 
+title: "Survey research datasets and R"
+author: "Danny Smith"
+date: "`r Sys.Date()`"
+site: "bookdown::bookdown_site"
+output:
+  bookdown::gitbook: default
+documentclass: book
+# bibliography: ["book.bib", "packages.bib"]
+# biblio-style: apalike
+# link-citations: yes
+---
+
+# Introduction
+
+## Abstract
+
+Although R began as a specialist statistical programming language, the R ecosystem has grown wildly over the past few years making it a viable general-purpose research environment across the whole research lifecycle.
+
+Survey research datasets come from a diverse range of sources, often containing richer metadata than your average data frame. This workshop provides a practical demonstration of several packages for accessing and working with survey data, associated metadata and official statistics in R.
+
+We will demonstrate:
+
+* Working with external data sources from common statistical packages (SPSS, SAS, Stata, Excel) and their quirks
+
+* Easily working with categorical data in R with the “labelled” R package
+
+* A brief introduction to the “tidy data” concept (https://tidyr.tidyverse.org/articles/tidy-data.html) and its application to survey research data
+
+* Accessing external databases in an R native way using DBI and dbplyr
+
+* Accessing publicly accessible data in R scripts via the web
+
+* Resources for accessing official statistics data in R
+
+Participants should have a basic working knowledge of R to follow along with examples, but beginners are also welcome.
+
+## Datasets
+
+[American Trends Panel Wave 56](https://www.pewsocialtrends.org/dataset/american-trends-panel-wave-56/)
+
+[Teens and Tech Survey 2018](https://www.pewresearch.org/internet/dataset/teens-and-tech-survey-2018/)
+
+# Statistical file formats
+
+## Excel
+
+[openxlsx](https://ycphs.github.io/openxlsx/)
+
+[xlsx](https://github.com/colearendt/xlsx)
+
+[readxl](https://readxl.tidyverse.org/)
+
+## foreign
+
+https://cran.r-project.org/web/packages/foreign/index.html
+
+## haven
+
+[haven](https://haven.tidyverse.org/)
+
+```{r}
+library(haven)
+
+
+```
+
+# Labelled data
+
+https://larmarange.github.io/labelled/
+
+## Definitions
+
+### Variable labels
+
+### Value labels
+
+### Missing values
+
+
+
+## Usage
+
+### Exploring datasets
+
+### Interactive printing
+
+
+
+### Tabling
+
+* gtsummary
+
+https://www.danieldsjoberg.com/gtsummary/
+
+# Accessing databases
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+
+con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+copy_to(con, mtcars)
+```
+
+## DBI
+
+https://dbi.r-dbi.org/
+
+## dbplyr
+
+https://dbplyr.tidyverse.org/
+
+# Official statistics
+
+https://github.com/SNStatComp/awesome-official-statistics-software
