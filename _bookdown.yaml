@@ -1,4 +1,4 @@
 book_filename: bookdown
 repo: https://github.com/socialresearchcentre/r_survey_datasets/
-edit: https://github.com/socialresearchcentre/r_survey_datasets/edit/master/%s
+edit: https://github.com/socialresearchcentre/r_survey_datasets/edit/main/%s
 delete_merged_file: true
