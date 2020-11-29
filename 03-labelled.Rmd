@@ -1,0 +1,105 @@
+
+# Labelled data
+
+[labelled](https://larmarange.github.io/labelled/)
+
+For a detailed introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette.
+
+```{r}
+library(haven)
+gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
+```
+
+```{r}
+library(labelled)
+library(dplyr, warn.conflicts = FALSE)
+
+str(gss$HEALTH)
+
+# Print helpers
+gss %>% count(HEALTH)
+
+gss %>% count(HELPSICK)
+```
+
+## Working with metadata
+
+### Variable labels
+
+### Value labels
+
+### Missing values
+
+SPSS includes user tagged missing values,
+
+```{r}
+gss %>% count(HEALTH, HEALTH_NA = is.na(HEALTH))
+```
+
+### Exploring datasets
+
+```{r}
+look_for(gss, "medical")
+
+look_for(gss, "income", details = FALSE)
+```
+
+### Factors
+
+```{r}
+# Convert to factors, using labels as levels
+gss %>% count(HEALTH = to_factor(HEALTH))
+
+# Include the category code in the label
+gss %>% count(HEALTH = to_factor(HEALTH, levels = "prefixed"))
+
+# Use the category code instead of the label
+gss %>% count(HEALTH = to_factor(HEALTH, levels = "values"))
+
+# Remove tagged NA values
+gss %>% count(HEALTH = to_factor(HEALTH, user_na_to_na = TRUE))
+```
+
+```{r}
+gss %>% count(HELPSICK = to_factor(HELPSICK))
+
+gss %>% count(HELPSICK = to_factor(HELPSICK, nolabel_to_na = TRUE))
+
+# Convert all labelled vectors to factors
+to_factor(gss)
+```
+
+```{r}
+# Convert to a character variable
+gss %>% count(HEALTH = to_character(HEALTH, levels = "prefixed"))
+```
+
+## Interaction with other packages
+
+### Frequency tables with [questionr](https://juba.github.io/questionr)
+
+```{r}
+library(questionr)
+
+freq(gss$HEALTH)
+
+ltabs(~ HELPSICK + HEALTH, gss, variable_label = FALSE)
+```
+
+### Tabling with [gtsummary](https://www.danieldsjoberg.com/gtsummary/)
+
+```{r}
+library(gtsummary)
+
+gss %>%
+  select(HEALTH, HELPSICK, HELPPOOR) %>%
+  to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
+  tbl_summary(by = HEALTH)
+```
+
+```{r}
+gss %>%
+  transmute(RINCOME, REALINC = unclass(REALINC), FINRELA) %>%
+  to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
+  tbl_summary(by = FINRELA, percent = "row")
+```

@@ -1,0 +1,46 @@
+
+# Accessing databases
+
+There are many ways to access databases from R, but we'll be focusing on [DBI](https://dbi.r-dbi.org/) and [dbplyr](https://dbplyr.tidyverse.org/)
+
+First, we'll create an sqlite database in memory from the `gss` dataset. Note that this will lose all the label metadata, since SQL tables do not support this kind of metadata tagging.
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+
+gss <- haven::read_sav("data/gss/GSS2018.sav", user_na = TRUE)
+
+con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+copy_to(con, gss)
+```
+
+Referencing a SQL table.
+
+```{r}
+gss_db <- tbl(con, "gss")
+gss_db
+```
+
+
+
+```{r}
+income <- gss_db %>%
+  group_by(HELPSICK) %>%
+  summarise(REALINC_AVG = mean(REALINC, na.rm = TRUE))
+
+show_query(income)
+
+collect(income)
+```
+
+Using hybrid SQL/R workflows in pipes.
+
+```{r}
+library(tidyr)
+
+gss_db %>%
+  group_by(HELPSICK, HEALTH) %>%
+  summarise(N = n()) %>%
+  collect() %>%
+  pivot_wider(names_from = "HEALTH", names_sort = TRUE, values_from = "N")
+```

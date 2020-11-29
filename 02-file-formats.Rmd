@@ -1,0 +1,75 @@
+
+# Statistical file formats
+
+## SPSS, SAS and Stata
+
+### [haven](https://haven.tidyverse.org/)
+
+> Haven enables R to read and write various data formats used by other statistical packages by wrapping the fantastic [ReadStat](http://www.evanmiller.org/) C library written by Evan Miller. Haven is part of the [tidyverse](http://tidyverse.org/).
+
+#### Pros {-}
+
+* Labelled datasets!
+
+* Good support for recent file formats, and good translation of data types into appropriate R classes.
+
+#### Cons {-}
+
+* For the non-tidyverse fans - deeply embedded in the tidyverse way of doing things.
+
+* Somewhat stable, but still has the occasional breaking change.
+
+#### Examples {-}
+
+The example below
+
+```{r, eval = FALSE}
+library(haven)
+
+gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
+
+gss <- read_stata("data/gss/GSS2018.dta")
+```
+
+### [foreign](https://cran.r-project.org/web/packages/foreign/index.html)
+
+> Reading and writing data stored by some versions of 'Epi Info', 'Minitab', 'S', 'SAS', 'SPSS', 'Stata', 'Systat', 'Weka', and for reading and writing some 'dBase' files.
+
+#### Pros {-}
+
+* Extremely stable.
+
+* Supported and developed by the R Core Team.
+
+#### Cons {-}
+
+* Splits long character variables into 255 character variables.
+
+* Inconsistent support for newer file formats.
+
+* Difficult to use cateogrical labels without converting to factors.
+
+#### Examples {-}
+
+```{r, eval = FALSE}
+library(foreign)
+
+gss <- read.spss("data/gss/GSS2018.sav", use.value.labels = FALSE) %>%
+  as_tibble()
+
+gss <- read.dta("data/gss/GSS2018.dta", convert.factors = FALSE) %>%
+  as_tibble()
+```
+
+## Excel
+
+No discussion of survey datasets would be complete without a mention of good old Excel.
+Our advice is to avoid Excel if possible - Excel files can have strange import issues, particularly with date formats and formulas.
+
+Where it is necessary to import Excel files there are many choices, but we would recommend these packages:
+
+* [openxlsx](https://ycphs.github.io/openxlsx/) - a custom Excel library. In our experience this package has the least weird Excel issues, and is fantastic for writing and styling output tables.
+
+* [readxl](https://readxl.tidyverse.org/) - a custom Excel library, part of the tidyverse. Very fast and reliable, but can do unexpected things when trying to guess column types. Does not support writing Excel workbooks.
+
+* [xlsx](https://github.com/colearendt/xlsx) - a wrapper for the [Apache POI](https://poi.apache.org/) Java library. Apache POI is well maintained, but extremely high memory usage for larger datasets.
