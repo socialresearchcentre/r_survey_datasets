@@ -20,11 +20,14 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(dplyr)
 ```
 
 # Introduction
 
-## Abstract
+This book accompanies the "Survey Research Datasets and R" workshop delivered for the [7th Biennial ACSPRI Social Science Methodology Conference](https://conferences.acspri.org.au/2020/). Many thanks to ACSPRI for having us, and to all the workshop attendees for participating.
+
+#### Abstract {-}
 
 Although R began as a specialist statistical programming language, the R ecosystem has grown wildly over the past few years making it a viable general-purpose research environment across the whole research lifecycle.
 
@@ -46,41 +49,108 @@ We will demonstrate:
 
 Participants should have a basic working knowledge of R to follow along with examples, but beginners are also welcome.
 
-## Datasets
+#### Dataset {-}
 
-[American Trends Panel Wave 56](https://www.pewsocialtrends.org/dataset/american-trends-panel-wave-56/)
-
-[Teens and Tech Survey 2018](https://www.pewresearch.org/internet/dataset/teens-and-tech-survey-2018/)
+We chose to use a real life survey dataset for demonstration purposes. The examples throughout use data from NORC at the University of Chicago's 2018 [General Society Survey](http://gss.norc.org/Get-The-Data).^[Smith, Tom W, Peter Marsden, Michael Hout, and Jibum Kim. General Social Surveys, 1972-2014]
 
 # Statistical file formats
 
-## Excel
+## SPSS, SAS and Stata
 
-[openxlsx](https://ycphs.github.io/openxlsx/)
+### [haven](https://haven.tidyverse.org/)
 
-[xlsx](https://github.com/colearendt/xlsx)
+> Haven enables R to read and write various data formats used by other statistical packages by wrapping the fantastic [ReadStat](http://www.evanmiller.org/) C library written by Evan Miller. Haven is part of the [tidyverse](http://tidyverse.org/).
 
-[readxl](https://readxl.tidyverse.org/)
+#### Pros {-}
 
-## foreign
+* Labelled datasets!
 
-https://cran.r-project.org/web/packages/foreign/index.html
+* Good support for recent file formats, and good translation of data types into appropriate R classes.
 
-## haven
+#### Cons {-}
 
-[haven](https://haven.tidyverse.org/)
+* For the non-tidyverse fans - deeply embedded in the tidyverse way of doing things.
+
+* Somewhat stable, but still has the occasional breaking change.
+
+#### Examples {-}
+
+The example below
 
 ```{r}
 library(haven)
 
+gss <- read_stata("data/gss/GSS2018.dta")
 
+gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
+
+gss
 ```
+
+### [foreign](https://cran.r-project.org/web/packages/foreign/index.html)
+
+> Reading and writing data stored by some versions of 'Epi Info', 'Minitab', 'S', 'SAS', 'SPSS', 'Stata', 'Systat', 'Weka', and for reading and writing some 'dBase' files.
+
+#### Pros {-}
+
+* Extremely stable.
+
+* Supported and developed by the R Core Team.
+
+#### Cons {-}
+
+* Splits long character variables into 255 character variables.
+
+* Inconsistent support for newer file formats.
+
+* Difficult to use cateogrical labels without converting to factors.
+
+#### Examples {-}
+
+```{r}
+library(foreign)
+
+gss <- read.dta("data/gss/GSS2018.dta", convert.factors = FALSE) %>%
+  as_tibble()
+
+gss <- read.spss("data/gss/GSS2018.sav", use.value.labels = FALSE) %>%
+  as_tibble()
+
+gss
+```
+
+## Excel
+
+No discussion of survey datasets would be complete without a mention of good old Excel.
+Our advice is to avoid Excel if possible - Excel files can have strange import issues, particularly with date formats and formulas.
+
+Where it is necessary to import Excel files there are many choices, but we would recommend these packages:
+
+* [openxlsx](https://ycphs.github.io/openxlsx/) - a custom Excel library. In our experience this package has the least weird Excel issues, and is fantastic for writing and styling output tables.
+
+* [readxl](https://readxl.tidyverse.org/) - a custom Excel library, part of the tidyverse. Very fast and reliable, but can do unexpected things when trying to guess column types. Does not support writing Excel workbooks.
+
+* [xlsx](https://github.com/colearendt/xlsx) - a wrapper for the [Apache POI](https://poi.apache.org/) Java library. Apache POI is well maintained, but extremely high memory usage for larger datasets.
 
 # Labelled data
 
-https://larmarange.github.io/labelled/
+[labelled](https://larmarange.github.io/labelled/)
 
-## Definitions
+For a detailed introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette.
+
+```{r}
+library(labelled)
+library(dplyr, warn.conflicts = FALSE)
+
+str(gss$HEALTH)
+
+# Print helpers
+gss %>% count(HEALTH)
+
+gss %>% count(HELPSICK)
+```
+
+## Working with metadata
 
 ### Variable labels
 
@@ -88,39 +158,109 @@ https://larmarange.github.io/labelled/
 
 ### Missing values
 
+SPSS includes user tagged missing values, 
 
-
-## Usage
+```{r}
+gss %>% count(HEALTH, HEALTH_NA = is.na(HEALTH))
+```
 
 ### Exploring datasets
 
-### Interactive printing
+```{r}
+look_for(gss, "medical")
 
+look_for(gss, "income", details = FALSE)
+```
 
+### Factors
 
-### Tabling
+```{r}
+# Convert to factors, using labels as levels
+gss %>% count(HEALTH = to_factor(HEALTH))
 
-* gtsummary
+# Include the category code in the label
+gss %>% count(HEALTH = to_factor(HEALTH, levels = "prefixed"))
 
-https://www.danieldsjoberg.com/gtsummary/
+# Use the category code instead of the label
+gss %>% count(HEALTH = to_factor(HEALTH, levels = "values"))
+
+# Remove tagged NA values
+gss %>% count(HEALTH = to_factor(HEALTH, user_na_to_na = TRUE))
+```
+
+```{r}
+gss %>% count(HELPSICK = to_factor(HELPSICK))
+
+gss %>% count(HELPSICK = to_factor(HELPSICK, nolabel_to_na = TRUE))
+
+# Convert all labelled vectors to factors
+to_factor(gss)
+```
+
+```{r}
+# Convert to a character variable
+gss %>% count(HEALTH = to_character(HEALTH, levels = "prefixed"))
+```
+
+## Interaction with other packages
+
+### Frequency tables with [questionr](https://juba.github.io/questionr)
+
+```{r}
+library(questionr)
+
+freq(gss$HEALTH)
+
+ltabs(~ HELPSICK + HEALTH, gss, variable_label = FALSE)
+```
+
+### Tabling with [gtsummary](https://www.danieldsjoberg.com/gtsummary/)
+
+```{r}
+library(gtsummary)
+
+gss %>%
+  select(HEALTH, HELPSICK, HELPPOOR) %>%
+  to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
+  tbl_summary(by = HEALTH)
+```
+
+```{r}
+gss %>%
+  transmute(RINCOME, REALINC = unclass(REALINC), FINRELA) %>%
+  to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
+  tbl_summary(by = FINRELA, percent = "row")
+```
 
 # Accessing databases
 
+There are many ways to access databases from R, but we'll be focusing on [DBI](https://dbi.r-dbi.org/) and [dbplyr](https://dbplyr.tidyverse.org/)
+
+First, we'll create an sqlite database in memory from the `gss` dataset. Note that this will lose all the label metadata, since SQL tables do not support this kind of metadata tagging.
+
 ```{r}
-library(dplyr, warn.conflicts = FALSE)
+library(DBI)
 
 con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-copy_to(con, mtcars)
+copy_to(con, gss)
 ```
 
-## DBI
+```{r}
+library(dbplyr)
 
-https://dbi.r-dbi.org/
+gss_db <- tbl(con, "gss")
+gss_db
+```
 
-## dbplyr
-
-https://dbplyr.tidyverse.org/
+```{r}
+gss_db %>%
+  group_by(HELPSICK) %>%
+  summarise(INCOME_AVG = mean(INCOME, na.rm = TRUE)) %>%
+  collect()
+```
 
 # Official statistics
+
+https://mattcowgill.github.io/readabs/
 
 https://github.com/SNStatComp/awesome-official-statistics-software
