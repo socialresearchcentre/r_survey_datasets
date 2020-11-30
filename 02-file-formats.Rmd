@@ -3,9 +3,11 @@
 
 ## SPSS, SAS and Stata
 
-### [haven](https://haven.tidyverse.org/)
+### haven
 
 > Haven enables R to read and write various data formats used by other statistical packages by wrapping the fantastic [ReadStat](http://www.evanmiller.org/) C library written by Evan Miller. Haven is part of the [tidyverse](http://tidyverse.org/).
+> 
+> --- https://haven.tidyverse.org/
 
 #### Pros {-}
 
@@ -13,17 +15,24 @@
 
 * Good support for recent file formats, and good translation of data types into appropriate R classes.
 
+* Supports writing as well as reading.
+
 #### Cons {-}
 
 * For the non-tidyverse fans - deeply embedded in the tidyverse way of doing things.
 
 * Somewhat stable, but still has the occasional breaking change.
 
+* 
+
 #### Examples {-}
 
-The example below
+The example below reads the GSS dataset in both SPSS and Stata formats.
+
+Note the inclusion of the `user_na = TRUE` for reading SPSS files. By default `read_sav()` converts user tagged `NA` values to `NA` in R - setting `user_na = TRUE` retains these values. We'll go into more detail on working with tagged missing values in section \@ref(missing-values).
 
 ```{r, eval = FALSE}
+install.packages("haven")
 library(haven)
 
 gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
@@ -31,9 +40,11 @@ gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
 gss <- read_stata("data/gss/GSS2018.dta")
 ```
 
-### [foreign](https://cran.r-project.org/web/packages/foreign/index.html)
+### foreign
 
 > Reading and writing data stored by some versions of 'Epi Info', 'Minitab', 'S', 'SAS', 'SPSS', 'Stata', 'Systat', 'Weka', and for reading and writing some 'dBase' files.
+> 
+> --- https://cran.r-project.org/web/packages/foreign/index.html
 
 #### Pros {-}
 
@@ -41,17 +52,22 @@ gss <- read_stata("data/gss/GSS2018.dta")
 
 * Supported and developed by the R Core Team.
 
+* Supports additional file formats not supported by haven.
+
 #### Cons {-}
 
 * Splits long character variables into 255 character variables.
 
-* Inconsistent support for newer file formats.
+* Inconsistent support for newer file formats (e.g. no support for Stata after version 12).
 
-* Difficult to use cateogrical labels without converting to factors.
+* Difficult to use categorical labels without converting to factors.
 
 #### Examples {-}
 
+The example below reads the GSS dataset in both SPSS and Stata formats.
+
 ```{r, eval = FALSE}
+install.packages("foreign")
 library(foreign)
 
 gss <- read.spss("data/gss/GSS2018.sav", use.value.labels = FALSE) %>%

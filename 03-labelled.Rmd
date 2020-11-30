@@ -1,53 +1,185 @@
 
+```{r setup3, include=FALSE}
+options(
+  htmltools.dir.version = FALSE, formatR.indent = 2,
+  width = 80, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
+)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dplyr)
+```
+
 # Labelled data
 
-[labelled](https://larmarange.github.io/labelled/)
+## What is labelled data?
 
-For a detailed introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette.
+One of the best (somewhat accidental) innovations of the haven package is the introduction of labelled vectors and other metadata tags into R that we commonly see when working with other statistical software.
+
+Labelled vectors were created as an R equivalent to categorical-esque types. Originally this was only intended as a pass-through class to get to factors. As the [`labelled()`](https://haven.tidyverse.org/reference/labelled.html) documentation from haven says:
+
+> This class provides few methods, as I expect you'll coerce to a standard R class (e.g. a factor()) soon after importing.
+
+It turns out that the labelled class is immensely useful in its own right. Fortunately R lives in the open source world, and the [labelled](https://larmarange.github.io/labelled/) package was created. This provides a set of helper functions for more easily working with labelled datasets, particularly for label editing and manipulation.
+
+We'll be going through some brief examples of working with labels, but for a more detailed general introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette.
+
+### The basics
+
+When reading a dataset using haven, variables have metadata attached as attributes.
+
+Standard attributes included regardless of variable type are:
+
+* A `label` attribute with the variable label
+
+* A `format.stata`, `format.spss`, or `format.sas` attribute, depending on the input type, storing the variable format for the specified file type (e.g. `"F1.0"`)
 
 ```{r}
 library(haven)
-gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
-```
-
-```{r}
 library(labelled)
 library(dplyr, warn.conflicts = FALSE)
 
+gss <- read_sav("data/gss/GSS2018.sav", user_na = TRUE)
+gss_dta <- read_dta("data/gss/GSS2018.dta")
+
+# A standard numeric variable, with additional attributes
+class(gss$YEAR)
+str(gss$YEAR)
+
+class(gss_dta$year)
+str(gss_dta$year)
+```
+
+If a variable contains labelled values it will be imported as a [`haven_labelled`](https://haven.tidyverse.org/reference/labelled.html) vector, which stores the variable labels in the `labels` attribute.
+
+If we're reading an SPSS file and the variable contains user-defined missing values it will be imported as a [`haven_labelled_spss`](https://haven.tidyverse.org/reference/labelled_spss.html) vector. This is an extension of the `haven_labelled` class that also records user-defined missing values in the `na_values` or `na_range` attribute as appropriate.
+
+```{r}
+# A "labelled" categorical variable
+class(gss$HEALTH)
 str(gss$HEALTH)
 
+class(gss_dta$health)
+str(gss_dta$health)
+```
+
+One immediate advantage of labelled vectors is that value labels are used in data frame printing when using [tibble](https://tibble.tidyverse.org/) (and by extension the wider tidyverse) and other packages using the [pillar](https://cran.r-project.org/web/packages/pillar/index.html) printing methods.
+
+```{r}
 # Print helpers
 gss %>% count(HEALTH)
 
 gss %>% count(HELPSICK)
 ```
 
-## Working with metadata
+Using `head()` on a variable will print a nicely formatted summary of the attached metadata, excluding formats.
 
-### Variable labels
+```{r}
+head(gss$HEALTH)
 
-### Value labels
+head(gss_dta$health)
+```
 
 ### Missing values
 
-SPSS includes user tagged missing values,
+#### User-defined missing values (SPSS)
+
+SPSS allows for user-defined missing values, where the user can tag a discrete set or a range of values to be treated as missing.
+
+These are relatively simple to deal with in haven, and allow for easy differential treatment of missing values in formatting and recoding methods as we'll see later. They get a handy `(NA)` prefix when printed in a tibble and return `TRUE` from `is.na()`.
 
 ```{r}
-gss %>% count(HEALTH, HEALTH_NA = is.na(HEALTH))
+# Missing values 0, 8 and 9
+head(gss$HEALTH)
+
+gss %>% count(HEALTH, is.na(HEALTH))
 ```
 
-### Exploring datasets
+One gotcha in our experience is that although they return `TRUE` from `is.na()` they are not  considered equivalent to `NA` in other contexts.
 
 ```{r}
-look_for(gss, "medical")
-
-look_for(gss, "income", details = FALSE)
+# These are not equivalent!
+gss %>% count(HEALTH, is.na(HEALTH), HEALTH %in% NA)
 ```
 
-### Factors
+Ranges work similarly to discrete values but will exclude all missing values in the range, as you would expect.
 
 ```{r}
-# Convert to factors, using labels as levels
+# Missing value range 13 - 99, plus discrete value 0
+head(gss$RINCOME)
+
+gss %>% count(RINCOME, is.na(RINCOME))
+```
+
+#### Tagged missing values (SAS, Stata)
+
+SAS and Stata take the opposite approach to SPSS - rather than tagging a value as missing, they tag missing data with a "type". This is also supported by haven, albeit in a slightly different way.
+
+Tagged missing values appear in the label set as an `NA` with an attached letter flagging the type.
+
+```{r}
+head(gss_dta$health)
+```
+
+Treatment of tagged missing values can be a bit funny compared to user-defined missing values. Note that, in the example below, doing a straight count for "IAP" does not match the SPSS example and is actually combining the "IAP" and "DK" values.
+
+```{r}
+gss_dta %>% count(health, is.na(health))
+```
+
+In many circumstances tagged `NA` values will be grouped together like this, which can be misleading, and need to be treated a bit differently.
+
+You can use `na_tag()` to extract the tagged type of the `NA` values, or `is_tagged_na()` to check for values with a particular tag.
+
+```{r}
+gss_dta %>%
+  count(
+    health,
+    is.na(health),
+    na_tag(health)
+  )
+
+gss_dta %>%
+  count(
+    health,
+    na_tag(health),
+    is_tagged_na(health),
+    is_tagged_na(health, "d")
+  )
+```
+
+#### Zapping
+
+To convert tagged or user-defined missing values to a standard R `NA`, you can use the `zap_missing` function on either a vector or a data frame.
+
+```{r}
+gss %>% count(HEALTH, zap_missing(HEALTH))
+
+gss_dta %>% count(health, na_tag(health), zap_missing(health))
+```
+
+You may recall earlier that we mentioned the `user_na = TRUE` argument for `read_sav()`. If you use `user_na = FALSE` (the default), it will convert user defined missing values to `NA` on the way in.
+
+```{r}
+read_sav("data/gss/GSS2018.sav", user_na = TRUE) %>%
+  zap_missing() %>%
+  count(HEALTH)
+
+read_sav("data/gss/GSS2018.sav", user_na = FALSE) %>%
+  count(HEALTH)
+```
+
+## Working with labelled data
+
+Labelled datasets are great for accessing metadata in the R console, but there are a few other useful applications for data analysis, tabling and processing.
+
+### Factors and character conversion
+
+The labelled package has a set of helper functions for converting labelled vectors to factors and character vectors.
+
+```{r}
+# Convert to factors, using the labels as levels
 gss %>% count(HEALTH = to_factor(HEALTH))
 
 # Include the category code in the label
@@ -55,42 +187,118 @@ gss %>% count(HEALTH = to_factor(HEALTH, levels = "prefixed"))
 
 # Use the category code instead of the label
 gss %>% count(HEALTH = to_factor(HEALTH, levels = "values"))
+```
 
-# Remove tagged NA values
+User defined missing values can be removed from the levels and converted to `NA`.
+
+```{r}
+# Remove user-defined NA values
 gss %>% count(HEALTH = to_factor(HEALTH, user_na_to_na = TRUE))
 ```
+
+Labels that don't exist in the data can be dropped from the levels.
+
+```{r}
+# Drop unused labels
+table(to_factor(gss$HEALTH))
+table(to_factor(gss$HEALTH, drop_unused_labels = TRUE))
+```
+
+Factor Levels can easily be sorted by either value or label. By default, they are sorted by value.
+
+```{r}
+# Sort by value
+levels(to_factor(gss$HEALTH, levels = "prefixed", sort_levels = "values"))
+
+# Sort by label
+levels(to_factor(gss$HEALTH, levels = "prefixed", sort_levels = "labels"))
+
+# Sort descending
+levels(to_factor(gss$HEALTH, levels = "prefixed", sort_levels = "values", decreasing = TRUE))
+```
+
+Unlabelled values can be discarded.
 
 ```{r}
 gss %>% count(HELPSICK = to_factor(HELPSICK))
 
+# Convert unlabelled levels to NA
 gss %>% count(HELPSICK = to_factor(HELPSICK, nolabel_to_na = TRUE))
+```
 
+And all labelled vectors in the data frame can be converted to factors in one go.
+
+```{r}
 # Convert all labelled vectors to factors
 to_factor(gss)
 ```
 
+The `to_character()` function allows you to convert to a character vector instead of a factor, using the same general conversion rules
+
 ```{r}
 # Convert to a character variable
 gss %>% count(HEALTH = to_character(HEALTH, levels = "prefixed"))
+
+# Remove tagged NA values
+gss %>% count(HEALTH = to_character(HEALTH, user_na_to_na = TRUE))
 ```
 
-## Interaction with other packages
+### Exploring datasets
 
-### Frequency tables with [questionr](https://juba.github.io/questionr)
+The labelled package provides a simple helper function `look_for()` for finding variables with either variable or value labels matching a search term in your dataset.
+
+Some simple examples are included below. For a more detailed rundown of the `look_for()` function see the [vignette](https://larmarange.github.io/labelled/articles/look_for.html).
+
+```{r}
+# Find variables with "medical" in the label
+look_for(gss, "medical")
+
+# Only provide basic details
+look_for(gss, "income", details = FALSE)
+
+# Search using a regular expression
+look_for(gss, "medic(al|ation)", details = FALSE)
+
+# Provide a variable summary as a tibble
+gss %>%
+  look_for("medic(al|ation)") %>%
+  as_tibble()
+
+# Provide a variable summary as a tibble with one row per value
+gss %>%
+  look_for("medic(al|ation)") %>%
+  lookfor_to_long_format()
+```
+
+### Labelled data in other packages
+
+Although labelled datasets are relatively new and somewhat of a niche there are a few packages that are starting to leverage the additional metadata provided.
+
+#### Frequency tables with [questionr](https://juba.github.io/questionr)
+
+The questionr package provides a set of convenient helper functions for survey processing tasks. Some of these use label and missing value metadata for display purposes.
+
+AMong others, the `freq()` function provides an equivalent to frequency tables produced in SPSS, and the `ltabs()` function provides a wrapper for `stats::xtabs()` that uses labels by default
 
 ```{r}
 library(questionr)
 
 freq(gss$HEALTH)
 
-ltabs(~ HELPSICK + HEALTH, gss, variable_label = FALSE)
+ltabs(~ HELPSICK + HEALTH, gss)
 ```
 
-### Tabling with [gtsummary](https://www.danieldsjoberg.com/gtsummary/)
+#### Tabling with [gtsummary](https://www.danieldsjoberg.com/gtsummary/)
+
+gtsummary was originally developed as a complement to the [gt]{https://gt.rstudio.com/} table presentation package, for easily producing summary tables of common indicators for datasets, regression models and so on.
+
+Variable labels will be used for labelling tables by default, where they exist. Value labels are not used by default, but can easily be included by converting the variables to factors as demonstrated in the previous section.
 
 ```{r}
 library(gtsummary)
+```
 
+```{r}
 gss %>%
   select(HEALTH, HELPSICK, HELPPOOR) %>%
   to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
@@ -103,3 +311,19 @@ gss %>%
   to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
   tbl_summary(by = FINRELA, percent = "row")
 ```
+
+```{r}
+gss %>%
+  to_factor(drop_unused_labels = TRUE, user_na_to_na = TRUE) %>%
+  tbl_cross(HELPSICK, HEALTH, percent = "row")
+```
+
+## Editing variable metadata
+
+### Variable labels
+
+### Value labels
+
+### Missing values
+
+
