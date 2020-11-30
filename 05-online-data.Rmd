@@ -76,7 +76,7 @@ airqual_xml
 
 ## Working with web requests
 
-SOmetimes it's necessary to work with web requests on a lower level, to do fancier things like setting cookies, building more complex web requests or using authentication. The [httr](https://httr.r-lib.org/) packages provides relatively easy functionality for making more complex web requests.
+Sometimes it's necessary to work with web requests on a lower level, to do fancier things like setting cookies, building more complex web requests or using authentication. The [httr](https://httr.r-lib.org/) packages provides relatively easy functionality for making more complex web requests.
 
 A full explanation of httr is out of our scope (see the httr [quickstart guide](https://httr.r-lib.org/articles/quickstart.html) for a more thorough introduction), but a simple example below shows how we could access the BoM JSON data using our own web request.
 
