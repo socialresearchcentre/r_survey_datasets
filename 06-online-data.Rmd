@@ -1,0 +1,113 @@
+
+# Online data
+
+## Reading data directly
+
+In the modern R world, a lot of the work of accessing web resources is baked into common data loading packages. Many packages allow you to read directly from a URL as if it were a file on your local machine.
+
+The [Tidy Tuesday](https://github.com/rfordatascience/tidytuesday) project is a great resource for a varied set of real world examples of loading and working with CSV datasets and spatial data.
+
+The code below is taken directly from a Tidy Tuesday [Australian Bushfires](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-07/readme.md) collection from early 2020. This example reads CSV data directly from web links using [readr](https://readr.tidyverse.org/), and spatial data from [JSON][JSON data] using [sf](https://r-spatial.github.io/sf/).
+
+```{r eval=FALSE}
+# Get the Data
+
+rainfall <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv')
+temperature <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv')
+
+# IF YOU USE THIS DATA PLEASE BE CAUTIOUS WITH INTERPRETATION
+nasa_fire <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/MODIS_C6_Australia_and_New_Zealand_7d.csv')
+
+# For JSON File of fires
+url <- "http://www.rfs.nsw.gov.au/feeds/majorIncidents.json"
+
+aus_fires <- sf::st_read(url)
+```
+
+If you need to load data from a web source, check the help page for your read function and see if it supports reading from URLs as well as local file paths before you dive into anything more complicated.
+
+## JSON data
+
+Data provided via web APIs is often made available in [JSON (JavaScript Object Notation)](https://www.json.org/) format, a simple human readable text format for storing hierarchical data.
+
+There are a few R packages that parse JSON data, but [jsonlite](https://cran.r-project.org/package=jsonlite) is our package of choice. Like readr and sf, jsonlite can read data directly from a URL.
+
+Data for for the following examples is sourced from the Australian Bureau of Meteorology's [Latest Weather Observations for Melbourne Airport](http://www.bom.gov.au/products/IDV60901/IDV60901.94866.shtml), made available directly from their website in JSON format.
+
+```{r}
+# Bureau of Meteorology - Latest Weather Observations for Melbourne Airport
+bom_url <- "http://www.bom.gov.au/fwo/IDV60901/IDV60901.94866.json"
+
+bom_data <- jsonlite::fromJSON(bom_url)
+```
+
+jsonlite has an intuitive mapping from JSON data types to R. The object returned from the BoM site is a list containing various pieces of metadata alongside our data of interest.
+
+Check out the [original URL](http://www.bom.gov.au/fwo/IDV60901/IDV60901.94866.json) to see the JSON data that has been mapped to this R structure.
+
+```{r}
+str(bom_data)
+```
+
+JSON data is often hierarchically structured or nested in this way, and you'll need to work your way through the structure to get to the data you need.
+
+```{r}
+class(bom_data)
+names(bom_data)
+names(bom_data$observations)
+
+class(bom_data$observations$data)
+bom_data$observations$data %>% as_tibble()
+```
+
+## XML data
+
+The [XML](https://en.wikipedia.org/wiki/XML) standard has been in general use since 1998, but it isn't used for serving web resources anywhere near as widely as it once was. Nevertheless, occasionally you'll come across web resources or other data in XML format.
+
+Navigating XML data structures can be a bit hairy and is worthy of a workshop of its own. We recommend the [xml2](https://xml2.r-lib.org/) package for working with XML, which can also load data directly from URLs using the `read_xml()` function.
+
+The example below loads data from the Queensland Government's [Air Quality Monitoring Live data feed ](https://www.data.qld.gov.au/dataset/air-quality-monitoring-live-data-feed).
+
+```{r}
+airqual_xml <- xml2::read_xml("https://apps.des.qld.gov.au/air-quality/xml/feed.php?category=1&region=ALL")
+
+airqual_xml
+```
+
+## Working with web requests
+
+SOmetimes it's necessary to work with web requests on a lower level, to do fancier things like setting cookies, building more complex web requests or using authentication. The [httr](https://httr.r-lib.org/) packages provides relatively easy functionality for making more complex web requests.
+
+A full explanation of httr is out of our scope (see the httr [quickstart guide](https://httr.r-lib.org/articles/quickstart.html) for a more thorough introduction), but a simple example below shows how we could access the BoM JSON data using our own web request.
+
+```{r}
+bom_url <- "http://www.bom.gov.au/fwo/IDV60901/IDV60901.94866.json"
+
+response <- httr::GET(bom_url)
+response
+
+bom_json <- httr::content(response, as = "text")
+substr(bom_json, 1, 1000)
+cat(substr(bom_json, 1, 1000))
+
+bom_data <- jsonlite::fromJSON(bom_json)
+str(bom_data)
+```
+
+## Downloading files
+
+When all else fails, or files are in a format that can't be parsed directly by an existing R package, downloading files is simple using base R.
+
+The GSS datasets we're using are retrieved when building this book using the base R download and unzip methods.
+
+```{r eval=FALSE}
+# Download datasets
+download.file("http://gss.norc.org/Documents/spss/2018_spss.zip", "data/gss_2018_spss.zip")
+download.file("http://gss.norc.org/Documents/stata/2018_stata.zip", "data/gss_2018_stata.zip")
+
+# Unzip
+unzip("data/gss_2018_spss.zip", exdir = "data/gss")
+unzip("data/gss_2018_stata.zip", exdir = "data/gss")
+```
+
+If you need to authenticate yourself, or to construct a more complex web request, httr is always a safe bet.
