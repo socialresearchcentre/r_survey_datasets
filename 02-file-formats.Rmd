@@ -23,8 +23,6 @@
 
 * Somewhat stable, but still has the occasional breaking change.
 
-* 
-
 #### Examples {-}
 
 The example below reads the GSS dataset in both SPSS and Stata formats.
@@ -44,7 +42,7 @@ gss <- read_stata("data/gss/GSS2018.dta")
 
 > Reading and writing data stored by some versions of 'Epi Info', 'Minitab', 'S', 'SAS', 'SPSS', 'Stata', 'Systat', 'Weka', and for reading and writing some 'dBase' files.
 > 
-> --- https://cran.r-project.org/web/packages/foreign/index.html
+> --- https://cran.r-project.org/package=foreign
 
 #### Pros {-}
 

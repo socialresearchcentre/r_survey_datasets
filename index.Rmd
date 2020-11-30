@@ -23,6 +23,20 @@ knitr::opts_chunk$set(
 library(dplyr)
 ```
 
+```{r download-data, include=FALSE}
+if (!file.exists("data/gss/GSS2018.sav") | !file.exists("data/gss/GSS2018.dta")) {
+  if (!dir.exists("data")) dir.create("data")
+  
+  # Download datasets
+  download.file("http://gss.norc.org/Documents/spss/2018_spss.zip", "data/gss_2018_spss.zip")
+  download.file("http://gss.norc.org/Documents/stata/2018_stata.zip", "data/gss_2018_stata.zip")
+  
+  # Unzip
+  unzip("data/gss_2018_spss.zip", exdir = "data/gss")
+  unzip("data/gss_2018_stata.zip", exdir = "data/gss")
+}
+```
+
 # Preface {-}
 
 This book accompanies the "Survey Research Datasets and R" workshop delivered for the [7th Biennial ACSPRI Social Science Methodology Conference](https://conferences.acspri.org.au/2020/). Many thanks to ACSPRI for having us, and to the workshop attendees for participating.

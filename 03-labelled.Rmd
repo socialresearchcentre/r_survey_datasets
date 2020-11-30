@@ -15,7 +15,7 @@ library(dplyr)
 
 ## What is labelled data?
 
-One of the best (somewhat accidental) innovations of the haven package is the introduction of labelled vectors and other metadata tags into R that we commonly see when working with other statistical software.
+One of the best (somewhat accidental) innovations of the haven package is the introduction of value labels and other metadata tags that we commonly see when working with other statistical software into R, primarily via the labelled vector.
 
 Labelled vectors were created as an R equivalent to categorical-esque types. Originally this was only intended as a pass-through class to get to factors. As the [`labelled()`](https://haven.tidyverse.org/reference/labelled.html) documentation from haven says:
 
@@ -23,7 +23,7 @@ Labelled vectors were created as an R equivalent to categorical-esque types. Ori
 
 It turns out that the labelled class is immensely useful in its own right. Fortunately R lives in the open source world, and the [labelled](https://larmarange.github.io/labelled/) package was created. This provides a set of helper functions for more easily working with labelled datasets, particularly for label editing and manipulation.
 
-We'll be going through some brief examples of working with labels, but for a more detailed general introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette.
+We'll be going through some brief examples of working with labels, but for a more detailed general introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette. The [labelled cheat sheet](https://raw.githubusercontent.com/larmarange/labelled/master/cheatsheet/labelled_cheatsheet.pdf) is a fantastic quick function reference.
 
 ### The basics
 
@@ -46,9 +46,11 @@ gss_dta <- read_dta("data/gss/GSS2018.dta")
 # A standard numeric variable, with additional attributes
 class(gss$YEAR)
 str(gss$YEAR)
+attributes(gss$YEAR)
 
 class(gss_dta$year)
 str(gss_dta$year)
+attributes(gss_dta$year)
 ```
 
 If a variable contains labelled values it will be imported as a [`haven_labelled`](https://haven.tidyverse.org/reference/labelled.html) vector, which stores the variable labels in the `labels` attribute.
@@ -59,9 +61,11 @@ If we're reading an SPSS file and the variable contains user-defined missing val
 # A "labelled" categorical variable
 class(gss$HEALTH)
 str(gss$HEALTH)
+attributes(gss$HEALTH)
 
 class(gss_dta$health)
 str(gss_dta$health)
+attributes(gss_dta$health)
 ```
 
 One immediate advantage of labelled vectors is that value labels are used in data frame printing when using [tibble](https://tibble.tidyverse.org/) (and by extension the wider tidyverse) and other packages using the [pillar](https://cran.r-project.org/web/packages/pillar/index.html) printing methods.
@@ -151,7 +155,7 @@ gss_dta %>%
 
 #### Zapping
 
-To convert tagged or user-defined missing values to a standard R `NA`, you can use the `zap_missing` function on either a vector or a data frame.
+To convert tagged or user-defined missing values to a standard R `NA`, you can use the `zap_missing()` function on either a vector or a data frame.
 
 ```{r}
 gss %>% count(HEALTH, zap_missing(HEALTH))
@@ -170,13 +174,15 @@ read_sav("data/gss/GSS2018.sav", user_na = FALSE) %>%
   count(HEALTH)
 ```
 
-## Working with labelled data
+## Converting labelled vectors
 
-Labelled datasets are great for accessing metadata in the R console, but there are a few other useful applications for data analysis, tabling and processing.
+Labelled datasets are great for accessing metadata in the R console, but many functions need base R data types.
 
-### Factors and character conversion
+### Factors
 
-The labelled package has a set of helper functions for converting labelled vectors to factors and character vectors.
+The labelled package has a couple of helper functions for converting labelled vectors to factors and character vectors. The `to_factor()` function is versatile, and can manipulate labels in various ways on the way to factor levels.
+
+The `levels` argument controls how levels are derived from the value labels.
 
 ```{r}
 # Convert to factors, using the labels as levels
@@ -189,14 +195,14 @@ gss %>% count(HEALTH = to_factor(HEALTH, levels = "prefixed"))
 gss %>% count(HEALTH = to_factor(HEALTH, levels = "values"))
 ```
 
-User defined missing values can be removed from the levels and converted to `NA`.
+User defined missing values can be removed from the levels and converted to `NA` using `user_na_to_na = TRUE`.
 
 ```{r}
 # Remove user-defined NA values
 gss %>% count(HEALTH = to_factor(HEALTH, user_na_to_na = TRUE))
 ```
 
-Labels that don't exist in the data can be dropped from the levels.
+Labels that don't exist in the data can be dropped from the levels using `drop_unused_labels = TRUE`.
 
 ```{r}
 # Drop unused labels
@@ -204,7 +210,7 @@ table(to_factor(gss$HEALTH))
 table(to_factor(gss$HEALTH, drop_unused_labels = TRUE))
 ```
 
-Factor Levels can easily be sorted by either value or label. By default, they are sorted by value.
+Factor Levels can easily be sorted by either value or label using the `sort_levels` argument. By default, they are sorted by value.
 
 ```{r}
 # Sort by value
@@ -217,7 +223,7 @@ levels(to_factor(gss$HEALTH, levels = "prefixed", sort_levels = "labels"))
 levels(to_factor(gss$HEALTH, levels = "prefixed", sort_levels = "values", decreasing = TRUE))
 ```
 
-Unlabelled values can be discarded.
+By default unlabelled values will be included with the value used as the factor level. They can be discarded with `no_label_to_na = TRUE`.
 
 ```{r}
 gss %>% count(HELPSICK = to_factor(HELPSICK))
@@ -233,7 +239,9 @@ And all labelled vectors in the data frame can be converted to factors in one go
 to_factor(gss)
 ```
 
-The `to_character()` function allows you to convert to a character vector instead of a factor, using the same general conversion rules
+### Character vectors
+
+The `to_character()` function allows you to convert to a character vector instead of a factor, using the same general conversion arguments as `to_factor()`.
 
 ```{r}
 # Convert to a character variable
@@ -243,7 +251,7 @@ gss %>% count(HEALTH = to_character(HEALTH, levels = "prefixed"))
 gss %>% count(HEALTH = to_character(HEALTH, user_na_to_na = TRUE))
 ```
 
-### Exploring datasets
+## Exploring datasets
 
 The labelled package provides a simple helper function `look_for()` for finding variables with either variable or value labels matching a search term in your dataset.
 
@@ -270,15 +278,15 @@ gss %>%
   lookfor_to_long_format()
 ```
 
-### Labelled data in other packages
+## Labelled data in other packages
 
 Although labelled datasets are relatively new and somewhat of a niche there are a few packages that are starting to leverage the additional metadata provided.
 
-#### Frequency tables with [questionr](https://juba.github.io/questionr)
+### Frequency tables with [questionr](https://juba.github.io/questionr)
 
 The questionr package provides a set of convenient helper functions for survey processing tasks. Some of these use label and missing value metadata for display purposes.
 
-AMong others, the `freq()` function provides an equivalent to frequency tables produced in SPSS, and the `ltabs()` function provides a wrapper for `stats::xtabs()` that uses labels by default
+Among others, the `freq()` function provides an equivalent to frequency tables produced in SPSS, and the `ltabs()` function provides a wrapper for `stats::xtabs()` that uses labels by default
 
 ```{r}
 library(questionr)
@@ -288,7 +296,7 @@ freq(gss$HEALTH)
 ltabs(~ HELPSICK + HEALTH, gss)
 ```
 
-#### Tabling with [gtsummary](https://www.danieldsjoberg.com/gtsummary/)
+### Tabling with [gtsummary](https://www.danieldsjoberg.com/gtsummary/)
 
 gtsummary was originally developed as a complement to the [gt]{https://gt.rstudio.com/} table presentation package, for easily producing summary tables of common indicators for datasets, regression models and so on.
 
