@@ -1,6 +1,41 @@
 
 # Official statistics
 
-https://mattcowgill.github.io/readabs/
+Traditionally official statistics and government released data has been accessed from the agency's website via awkwardly structured Excel sheets and dense zip files.
 
-https://github.com/SNStatComp/awesome-official-statistics-software
+With the growth of the open data movement, much more government data is publicly available, and a good starting point for Australian data is the various state and territory data.<state>.gov.au websites (although try finding anything on the national [data.gov.au](https://data.gov.au/) website, I dare you!).
+
+There are a growing number of R packages for easily and directly accessing official statistics data, although coverage of Australian data sources is limited. A good resource for official statistics is the [Awesome official statistics software](https://github.com/SNStatComp/awesome-official-statistics-software#access-to-official-statistics-gsbpm-74) list.
+
+#### readabs {-}
+
+A very special mention goes to the [readabs](https://mattcowgill.github.io/readabs/) package, created and maintained by Matt Cowgill from the Grattan Institute.
+
+readabs is amazingly useful, but the ABS data holdings are large and it can take a bit of getting used to. A good starting point is the [introductory vignette](https://mattcowgill.github.io/readabs/articles/readabs_vignette.html).
+
+The example below presents birth and death rates from 1981 to 2020, using data loaded directly from the `read_abs()` function.
+
+```{r}
+library(readabs)
+
+# Load ABS National, state and territory population estimate
+# https://www.abs.gov.au/statistics/people/population/national-state-and-territory-population/latest-release
+pop <- read_abs("3101.0", tables = 1)
+
+pop
+
+pop <- pop %>% separate_series()
+
+library(ggplot2)
+pop %>%
+  filter(series_1 %in% c("Births", "Deaths")) %>%
+  mutate(value = value * 1000) %>%
+  ggplot(aes(x = date, y = value, col = series_1)) +
+  geom_line() +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        axis.title = element_blank(),
+        legend.title = element_blank()) +
+  labs(title = "Australia, Births and Deaths, 1981-2020",
+       caption = "Source: ABS 3101.0")
+```
