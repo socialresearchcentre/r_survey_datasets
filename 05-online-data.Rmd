@@ -60,6 +60,21 @@ class(bom_data$observations$data)
 bom_data$observations$data %>% as_tibble()
 ```
 
+Just for fun, here's the temperature as a line graph.
+
+```{r}
+library(ggplot2)
+bom_data$observations$data %>%
+  ggplot(aes(x = lubridate::as_datetime(local_date_time_full), y = apparent_t)) +
+  geom_line() +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        axis.title = element_blank(),
+        legend.title = element_blank()) +
+  labs(title = "Melbourne Airport, Apparent Temperature (celsius)",
+       caption = "Source: Bureau of Meteorology")
+```
+
 ## XML data
 
 The [XML](https://en.wikipedia.org/wiki/XML) standard has been in general use since 1998, but it isn't used for serving web resources anywhere near as widely as it once was. Nevertheless, occasionally you'll come across web resources or other data in XML format.
