@@ -41,6 +41,8 @@ if (!file.exists("data/gss/GSS2018.sav") | !file.exists("data/gss/GSS2018.dta"))
 
 This book accompanies the "Survey Research Datasets and R" workshop delivered for the [7th Biennial ACSPRI Social Science Methodology Conference](https://conferences.acspri.org.au/2020/). Many thanks to ACSPRI for having us, and to the workshop attendees for participating.
 
+The R packages covered in this book are the result of uncountable hours of hard work by the R community, and all are freely available and released under open source licenses. The work we do would not be possible without them!
+
 #### License {-}
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
@@ -49,4 +51,16 @@ This work, as a whole, is licensed under a <a rel="license" href="http://creativ
 
 #### Datasets {-}
 
-We chose to use a real life survey dataset for demonstration purposes. The examples throughout use data from NORC at the University of Chicago's 2018 [General Society Survey](http://gss.norc.org/Get-The-Data).^[Smith, Tom W, Peter Marsden, Michael Hout, and Jibum Kim. General Social Surveys, 1972-2014]
+We chose to use a real life survey dataset for demonstration purposes. The majority of examples throughout use data from NORC at the University of Chicago's 2018 [General Society Survey](http://gss.norc.org/Get-The-Data).^[Smith, Tom W, Peter Marsden, Michael Hout, and Jibum Kim. General Social Surveys, 1972-2014]
+
+The online data examples use publicly available data from the [Tidy Tuesday](https://github.com/rfordatascience/tidytuesday) project, the Australian [Bureau of Meteorology](http://www.bom.gov.au) and the [Queensland Government](https://www.data.qld.gov.au).
+
+A very heartfelt thankyou to the people and organisations advocating for open data release and doing the work to make this data publicly available.
+
+#### About the author {-}
+
+Danny Smith is a Senior Data Scientist at the [Social Research Centre](https://www.srcentre.com.au/). Danny has worked as a survey programmer, analyst and data scientist in the survey research industry for 10 years.
+
+His main interest and expertise is in research systems architecture, building systems that support automation of data workflows and processes and associated tools. He is an avid R user and supporter of free and open source software.
+
+You can find him on GitHub (https://github.com/gorcha/).

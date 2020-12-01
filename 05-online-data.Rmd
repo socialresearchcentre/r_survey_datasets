@@ -1,6 +1,10 @@
 
 # Online data
 
+Accessing data directly from web sources is becoming increasingly common, both from hosted files in more traditional formats and from web APIs.
+
+This chapter provides a general overview of accessing online data directly from R, and working with common web API formats.
+
 ## Reading data directly
 
 In the modern R world, a lot of the work of accessing web resources is baked into common data loading packages. Many packages allow you to read directly from a URL as if it were a file on your local machine.

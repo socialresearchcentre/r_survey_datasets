@@ -16,7 +16,7 @@ DBI's big strength is that it can connect to many different database types using
 * [RPostgres](https://rpostgres.r-dbi.org/) for PostgreSQL
 * [RMariaDB](https://rmariadb.r-dbi.org/) for MariaDB or MySQL
 * [RSQLite](https://rsqlite.r-dbi.org/) for SQLite
-* [odbc](https://github.com/r-dbi/odbc) for databases that you can access via ODBC (commonly use for MS SQL Server)
+* [odbc](https://github.com/r-dbi/odbc) for databases that you can access via ODBC (commonly used for MS SQL Server)
 * [bigrquery](https://github.com/r-dbi/bigrquery) for Google BigQuery
 
 These backend packages handle the translation of the standard DBI functions (e.g. running queries, creating and updating tables) to lower level interaction with the database, taking account of any differences in the database implementation and removing these from the view of the user.

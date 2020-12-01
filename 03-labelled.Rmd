@@ -1,21 +1,7 @@
 
-```{r setup3, include=FALSE}
-options(
-  htmltools.dir.version = FALSE, formatR.indent = 2,
-  width = 80, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
-)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-library(dplyr)
-```
-
 # Labelled data
 
-## What is labelled data?
-
-One of the best (somewhat accidental) innovations of the haven package is the introduction of value labels and other metadata tags that we commonly see when working with other statistical software into R, primarily via the labelled vector.
+One of the best (and somewhat accidental) innovations of the haven package is the introduction of value labels and other metadata tags that we commonly see when working with other statistical software into R, primarily via the labelled vector.
 
 Labelled vectors were created as an R equivalent to categorical-esque types. Originally this was only intended as a pass-through class to get to factors. As the [`labelled()`](https://haven.tidyverse.org/reference/labelled.html) documentation from haven says:
 
@@ -25,9 +11,11 @@ It turns out that the labelled class is immensely useful in its own right. Fortu
 
 We'll be going through some brief examples of working with labels, but for a more detailed general introduction see the [Introduction to labelled](https://larmarange.github.io/labelled/articles/intro_labelled.html) vignette. The [labelled cheat sheet](https://raw.githubusercontent.com/larmarange/labelled/master/cheatsheet/labelled_cheatsheet.pdf) is a fantastic quick function reference.
 
+## What is labelled data?
+
 ### The basics
 
-When reading a dataset using haven, variables have metadata attached as attributes.
+When reading a dataset using haven, variables have labels and other metadata attached as attributes.
 
 Standard attributes included regardless of variable type are:
 
@@ -326,12 +314,10 @@ gss %>%
   tbl_cross(HELPSICK, HEALTH, percent = "row")
 ```
 
-## Editing variable metadata
+<!-- ## Editing variable metadata -->
 
-### Variable labels
+<!-- ### Variable labels -->
 
-### Value labels
+<!-- ### Value labels -->
 
-### Missing values
-
-
+<!-- ### Missing values -->

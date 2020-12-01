@@ -1,7 +1,12 @@
 
 # Statistical file formats
 
+A common thread in survey research is working with data provided in various external file formats. This chapter provides a brief overview of file loading for common statistical file formats and Excel.
+
 ## SPSS, SAS and Stata
+
+SPSS, SAS and Stata don't provide public documentation of their file formats, so we rely on a few good eggs reverse engineering the file formats to be able to read these dirrectly into R.
+The two most used R packages for accessing these datasets are haven and foreign.
 
 ### haven
 
@@ -78,12 +83,12 @@ gss <- read.dta("data/gss/GSS2018.dta", convert.factors = FALSE) %>%
 ## Excel
 
 No discussion of survey datasets would be complete without a mention of good old Excel.
-Our advice is to avoid Excel if possible - Excel files can have strange import issues, particularly with date formats and formulas.
+Our advice is to avoid Excel if possible - Excel files can have strange import issues, particularly with dates and formulas.
 
 Where it is necessary to import Excel files there are many choices, but we would recommend these packages:
 
-* [openxlsx](https://ycphs.github.io/openxlsx/) - a custom Excel library. In our experience this package has the least weird Excel issues, and is fantastic for writing and styling output tables.
+* [openxlsx](https://ycphs.github.io/openxlsx/) - a custom Excel library built in C++ with an R frontend. In our experience this package has the least weird Excel issues, and is fantastic for writing and styling output tables.
 
-* [readxl](https://readxl.tidyverse.org/) - a custom Excel library, part of the tidyverse. Very fast and reliable, but can do unexpected things when trying to guess column types. Does not support writing Excel workbooks.
+* [readxl](https://readxl.tidyverse.org/) - Part of the tidyverse. Built on the [libxls](https://github.com/evanmiller/libxls) C library and the [RapidXML](http://rapidxml.sourceforge.net/) C++ library. Very fast and reliable, but can do unexpected things when trying to guess column types. Does not support writing Excel workbooks.
 
 * [xlsx](https://github.com/colearendt/xlsx) - a wrapper for the [Apache POI](https://poi.apache.org/) Java library. Apache POI is well maintained, but extremely high memory usage for larger datasets.
