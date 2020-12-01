@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3.1 What is labelled data? | Survey Research Datasets and R</title>
+  <meta name="description" content="3.1 What is labelled data? | Survey Research Datasets and R" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3.1 What is labelled data? | Survey Research Datasets and R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://socialresearchcentre.github.io/r_survey_datasets/" />
+  
+  
+  <meta name="github-repo" content="socialresearchcentre/r_survey_datasets" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3.1 What is labelled data? | Survey Research Datasets and R" />
+  
+  
+  
+
+<meta name="author" content="Danny Smith" />
+
+
+<meta name="date" content="2020-12-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="labelled-data.html"/>
+<link rel="next" href="converting-labelled-vectors.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Survey Research Datasets and R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="statistical-file-formats.html"><a href="statistical-file-formats.html"><i class="fa fa-check"></i><b>2</b> Statistical file formats</a><ul>
+<li class="chapter" data-level="2.1" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html"><i class="fa fa-check"></i><b>2.1</b> SPSS, SAS and Stata</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html#haven"><i class="fa fa-check"></i><b>2.1.1</b> haven</a></li>
+<li class="chapter" data-level="2.1.2" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html#foreign"><i class="fa fa-check"></i><b>2.1.2</b> foreign</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="excel.html"><a href="excel.html"><i class="fa fa-check"></i><b>2.2</b> Excel</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="labelled-data.html"><a href="labelled-data.html"><i class="fa fa-check"></i><b>3</b> Labelled data</a><ul>
+<li class="chapter" data-level="3.1" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html"><i class="fa fa-check"></i><b>3.1</b> What is labelled data?</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html#the-basics"><i class="fa fa-check"></i><b>3.1.1</b> The basics</a></li>
+<li class="chapter" data-level="3.1.2" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html#missing-values"><i class="fa fa-check"></i><b>3.1.2</b> Missing values</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html"><i class="fa fa-check"></i><b>3.2</b> Converting labelled vectors</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html#factors"><i class="fa fa-check"></i><b>3.2.1</b> Factors</a></li>
+<li class="chapter" data-level="3.2.2" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html#character-vectors"><i class="fa fa-check"></i><b>3.2.2</b> Character vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="exploring-datasets.html"><a href="exploring-datasets.html"><i class="fa fa-check"></i><b>3.3</b> Exploring datasets</a></li>
+<li class="chapter" data-level="3.4" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html"><i class="fa fa-check"></i><b>3.4</b> Labelled data in other packages</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html#frequency-tables-with-questionr"><i class="fa fa-check"></i><b>3.4.1</b> Frequency tables with <span>questionr</span></a></li>
+<li class="chapter" data-level="3.4.2" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html#tabling-with-gtsummary"><i class="fa fa-check"></i><b>3.4.2</b> Tabling with <span>gtsummary</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="accessing-databases.html"><a href="accessing-databases.html"><i class="fa fa-check"></i><b>4</b> Accessing databases</a><ul>
+<li class="chapter" data-level="4.1" data-path="dbi.html"><a href="dbi.html"><i class="fa fa-check"></i><b>4.1</b> DBI</a></li>
+<li class="chapter" data-level="4.2" data-path="dbplyr.html"><a href="dbplyr.html"><i class="fa fa-check"></i><b>4.2</b> dbplyr</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="dbplyr.html"><a href="dbplyr.html#accessing-the-database"><i class="fa fa-check"></i><b>4.2.1</b> Accessing the database</a></li>
+<li class="chapter" data-level="4.2.2" data-path="dbplyr.html"><a href="dbplyr.html#using-dplyr-verbs"><i class="fa fa-check"></i><b>4.2.2</b> Using dplyr verbs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="dbplyr.html"><a href="dbplyr.html#disclaimer"><i class="fa fa-check"></i><b>4.2.3</b> Disclaimer</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="online-data.html"><a href="online-data.html"><i class="fa fa-check"></i><b>5</b> Online data</a><ul>
+<li class="chapter" data-level="5.1" data-path="reading-data-directly.html"><a href="reading-data-directly.html"><i class="fa fa-check"></i><b>5.1</b> Reading data directly</a></li>
+<li class="chapter" data-level="5.2" data-path="json-data.html"><a href="json-data.html"><i class="fa fa-check"></i><b>5.2</b> JSON data</a></li>
+<li class="chapter" data-level="5.3" data-path="xml-data.html"><a href="xml-data.html"><i class="fa fa-check"></i><b>5.3</b> XML data</a></li>
+<li class="chapter" data-level="5.4" data-path="working-with-web-requests.html"><a href="working-with-web-requests.html"><i class="fa fa-check"></i><b>5.4</b> Working with web requests</a></li>
+<li class="chapter" data-level="5.5" data-path="downloading-files.html"><a href="downloading-files.html"><i class="fa fa-check"></i><b>5.5</b> Downloading files</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="official-statistics.html"><a href="official-statistics.html"><i class="fa fa-check"></i><b>6</b> Official statistics</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Survey Research Datasets and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="what-is-labelled-data" class="section level2">
+<h2><span class="header-section-number">3.1</span> What is labelled data?</h2>
+<div id="the-basics" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> The basics</h3>
+<p>When reading a dataset using haven, variables have labels and other metadata attached as attributes.</p>
+<p>Standard attributes included regardless of variable type are:</p>
+<ul>
+<li><p>A <code>label</code> attribute with the variable label</p></li>
+<li><p>A <code>format.stata</code>, <code>format.spss</code>, or <code>format.sas</code> attribute, depending on the input type, storing the variable format for the specified file type (e.g. <code>"F1.0"</code>)</p></li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="what-is-labelled-data.html#cb3-1"></a><span class="kw">library</span>(haven)</span>
+<span id="cb3-2"><a href="what-is-labelled-data.html#cb3-2"></a><span class="kw">library</span>(labelled)</span>
+<span id="cb3-3"><a href="what-is-labelled-data.html#cb3-3"></a><span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb3-4"><a href="what-is-labelled-data.html#cb3-4"></a></span>
+<span id="cb3-5"><a href="what-is-labelled-data.html#cb3-5"></a>gss &lt;-<span class="st"> </span><span class="kw">read_sav</span>(<span class="st">&quot;data/gss/GSS2018.sav&quot;</span>, <span class="dt">user_na =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb3-6"><a href="what-is-labelled-data.html#cb3-6"></a>gss_dta &lt;-<span class="st"> </span><span class="kw">read_dta</span>(<span class="st">&quot;data/gss/GSS2018.dta&quot;</span>)</span>
+<span id="cb3-7"><a href="what-is-labelled-data.html#cb3-7"></a></span>
+<span id="cb3-8"><a href="what-is-labelled-data.html#cb3-8"></a><span class="co"># A standard numeric variable, with additional attributes</span></span>
+<span id="cb3-9"><a href="what-is-labelled-data.html#cb3-9"></a><span class="kw">class</span>(gss<span class="op">$</span>YEAR)</span>
+<span id="cb3-10"><a href="what-is-labelled-data.html#cb3-10"></a><span class="co">#&gt; [1] &quot;numeric&quot;</span></span>
+<span id="cb3-11"><a href="what-is-labelled-data.html#cb3-11"></a><span class="kw">str</span>(gss<span class="op">$</span>YEAR)</span>
+<span id="cb3-12"><a href="what-is-labelled-data.html#cb3-12"></a><span class="co">#&gt;  num [1:2348] 2018 2018 2018 2018 2018 ...</span></span>
+<span id="cb3-13"><a href="what-is-labelled-data.html#cb3-13"></a><span class="co">#&gt;  - attr(*, &quot;label&quot;)= chr &quot;GSS year for this respondent&quot;</span></span>
+<span id="cb3-14"><a href="what-is-labelled-data.html#cb3-14"></a><span class="co">#&gt;  - attr(*, &quot;format.spss&quot;)= chr &quot;F4.0&quot;</span></span>
+<span id="cb3-15"><a href="what-is-labelled-data.html#cb3-15"></a><span class="kw">attributes</span>(gss<span class="op">$</span>YEAR)</span>
+<span id="cb3-16"><a href="what-is-labelled-data.html#cb3-16"></a><span class="co">#&gt; $label</span></span>
+<span id="cb3-17"><a href="what-is-labelled-data.html#cb3-17"></a><span class="co">#&gt; [1] &quot;GSS year for this respondent&quot;</span></span>
+<span id="cb3-18"><a href="what-is-labelled-data.html#cb3-18"></a><span class="co">#&gt; </span></span>
+<span id="cb3-19"><a href="what-is-labelled-data.html#cb3-19"></a><span class="co">#&gt; $format.spss</span></span>
+<span id="cb3-20"><a href="what-is-labelled-data.html#cb3-20"></a><span class="co">#&gt; [1] &quot;F4.0&quot;</span></span>
+<span id="cb3-21"><a href="what-is-labelled-data.html#cb3-21"></a></span>
+<span id="cb3-22"><a href="what-is-labelled-data.html#cb3-22"></a><span class="kw">class</span>(gss_dta<span class="op">$</span>year)</span>
+<span id="cb3-23"><a href="what-is-labelled-data.html#cb3-23"></a><span class="co">#&gt; [1] &quot;numeric&quot;</span></span>
+<span id="cb3-24"><a href="what-is-labelled-data.html#cb3-24"></a><span class="kw">str</span>(gss_dta<span class="op">$</span>year)</span>
+<span id="cb3-25"><a href="what-is-labelled-data.html#cb3-25"></a><span class="co">#&gt;  num [1:2348] 2018 2018 2018 2018 2018 ...</span></span>
+<span id="cb3-26"><a href="what-is-labelled-data.html#cb3-26"></a><span class="co">#&gt;  - attr(*, &quot;label&quot;)= chr &quot;gss year for this respondent &quot;</span></span>
+<span id="cb3-27"><a href="what-is-labelled-data.html#cb3-27"></a><span class="co">#&gt;  - attr(*, &quot;format.stata&quot;)= chr &quot;%8.0g&quot;</span></span>
+<span id="cb3-28"><a href="what-is-labelled-data.html#cb3-28"></a><span class="kw">attributes</span>(gss_dta<span class="op">$</span>year)</span>
+<span id="cb3-29"><a href="what-is-labelled-data.html#cb3-29"></a><span class="co">#&gt; $label</span></span>
+<span id="cb3-30"><a href="what-is-labelled-data.html#cb3-30"></a><span class="co">#&gt; [1] &quot;gss year for this respondent &quot;</span></span>
+<span id="cb3-31"><a href="what-is-labelled-data.html#cb3-31"></a><span class="co">#&gt; </span></span>
+<span id="cb3-32"><a href="what-is-labelled-data.html#cb3-32"></a><span class="co">#&gt; $format.stata</span></span>
+<span id="cb3-33"><a href="what-is-labelled-data.html#cb3-33"></a><span class="co">#&gt; [1] &quot;%8.0g&quot;</span></span></code></pre></div>
+<p>If a variable contains labelled values it will be imported as a <a href="https://haven.tidyverse.org/reference/labelled.html"><code>haven_labelled</code></a> vector, which stores the variable labels in the <code>labels</code> attribute.</p>
+<p>If we’re reading an SPSS file and the variable contains user-defined missing values it will be imported as a <a href="https://haven.tidyverse.org/reference/labelled_spss.html"><code>haven_labelled_spss</code></a> vector. This is an extension of the <code>haven_labelled</code> class that also records user-defined missing values in the <code>na_values</code> or <code>na_range</code> attribute as appropriate.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="what-is-labelled-data.html#cb4-1"></a><span class="co"># A &quot;labelled&quot; categorical variable</span></span>
+<span id="cb4-2"><a href="what-is-labelled-data.html#cb4-2"></a><span class="kw">class</span>(gss<span class="op">$</span>HEALTH)</span>
+<span id="cb4-3"><a href="what-is-labelled-data.html#cb4-3"></a><span class="co">#&gt; [1] &quot;haven_labelled_spss&quot; &quot;haven_labelled&quot;      &quot;vctrs_vctr&quot;         </span></span>
+<span id="cb4-4"><a href="what-is-labelled-data.html#cb4-4"></a><span class="co">#&gt; [4] &quot;double&quot;</span></span>
+<span id="cb4-5"><a href="what-is-labelled-data.html#cb4-5"></a><span class="kw">str</span>(gss<span class="op">$</span>HEALTH)</span>
+<span id="cb4-6"><a href="what-is-labelled-data.html#cb4-6"></a><span class="co">#&gt;  dbl+lbl [1:2348] 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 0, 4, 1, 0, 2, 0, 1, 1, ...</span></span>
+<span id="cb4-7"><a href="what-is-labelled-data.html#cb4-7"></a><span class="co">#&gt;  @ label      : chr &quot;Condition of health&quot;</span></span>
+<span id="cb4-8"><a href="what-is-labelled-data.html#cb4-8"></a><span class="co">#&gt;  @ na_values  : num [1:3] 0 8 9</span></span>
+<span id="cb4-9"><a href="what-is-labelled-data.html#cb4-9"></a><span class="co">#&gt;  @ format.spss: chr &quot;F1.0&quot;</span></span>
+<span id="cb4-10"><a href="what-is-labelled-data.html#cb4-10"></a><span class="co">#&gt;  @ labels     : Named num [1:7] 0 1 2 3 4 8 9</span></span>
+<span id="cb4-11"><a href="what-is-labelled-data.html#cb4-11"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:7] &quot;IAP&quot; &quot;EXCELLENT&quot; &quot;GOOD&quot; &quot;FAIR&quot; ...</span></span>
+<span id="cb4-12"><a href="what-is-labelled-data.html#cb4-12"></a><span class="kw">attributes</span>(gss<span class="op">$</span>HEALTH)</span>
+<span id="cb4-13"><a href="what-is-labelled-data.html#cb4-13"></a><span class="co">#&gt; $label</span></span>
+<span id="cb4-14"><a href="what-is-labelled-data.html#cb4-14"></a><span class="co">#&gt; [1] &quot;Condition of health&quot;</span></span>
+<span id="cb4-15"><a href="what-is-labelled-data.html#cb4-15"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="what-is-labelled-data.html#cb4-16"></a><span class="co">#&gt; $na_values</span></span>
+<span id="cb4-17"><a href="what-is-labelled-data.html#cb4-17"></a><span class="co">#&gt; [1] 0 8 9</span></span>
+<span id="cb4-18"><a href="what-is-labelled-data.html#cb4-18"></a><span class="co">#&gt; </span></span>
+<span id="cb4-19"><a href="what-is-labelled-data.html#cb4-19"></a><span class="co">#&gt; $class</span></span>
+<span id="cb4-20"><a href="what-is-labelled-data.html#cb4-20"></a><span class="co">#&gt; [1] &quot;haven_labelled_spss&quot; &quot;haven_labelled&quot;      &quot;vctrs_vctr&quot;         </span></span>
+<span id="cb4-21"><a href="what-is-labelled-data.html#cb4-21"></a><span class="co">#&gt; [4] &quot;double&quot;             </span></span>
+<span id="cb4-22"><a href="what-is-labelled-data.html#cb4-22"></a><span class="co">#&gt; </span></span>
+<span id="cb4-23"><a href="what-is-labelled-data.html#cb4-23"></a><span class="co">#&gt; $format.spss</span></span>
+<span id="cb4-24"><a href="what-is-labelled-data.html#cb4-24"></a><span class="co">#&gt; [1] &quot;F1.0&quot;</span></span>
+<span id="cb4-25"><a href="what-is-labelled-data.html#cb4-25"></a><span class="co">#&gt; </span></span>
+<span id="cb4-26"><a href="what-is-labelled-data.html#cb4-26"></a><span class="co">#&gt; $labels</span></span>
+<span id="cb4-27"><a href="what-is-labelled-data.html#cb4-27"></a><span class="co">#&gt;       IAP EXCELLENT      GOOD      FAIR      POOR        DK        NA </span></span>
+<span id="cb4-28"><a href="what-is-labelled-data.html#cb4-28"></a><span class="co">#&gt;         0         1         2         3         4         8         9</span></span>
+<span id="cb4-29"><a href="what-is-labelled-data.html#cb4-29"></a></span>
+<span id="cb4-30"><a href="what-is-labelled-data.html#cb4-30"></a><span class="kw">class</span>(gss_dta<span class="op">$</span>health)</span>
+<span id="cb4-31"><a href="what-is-labelled-data.html#cb4-31"></a><span class="co">#&gt; [1] &quot;haven_labelled&quot; &quot;vctrs_vctr&quot;     &quot;double&quot;</span></span>
+<span id="cb4-32"><a href="what-is-labelled-data.html#cb4-32"></a><span class="kw">str</span>(gss_dta<span class="op">$</span>health)</span>
+<span id="cb4-33"><a href="what-is-labelled-data.html#cb4-33"></a><span class="co">#&gt;  dbl+lbl [1:2348]     2,     1, NA(i), NA(i),     1,     2,     2,     1, N...</span></span>
+<span id="cb4-34"><a href="what-is-labelled-data.html#cb4-34"></a><span class="co">#&gt;  @ label       : chr &quot;condition of health&quot;</span></span>
+<span id="cb4-35"><a href="what-is-labelled-data.html#cb4-35"></a><span class="co">#&gt;  @ format.stata: chr &quot;%8.0g&quot;</span></span>
+<span id="cb4-36"><a href="what-is-labelled-data.html#cb4-36"></a><span class="co">#&gt;  @ labels      : Named num [1:7] 1 2 3 4 NA NA NA</span></span>
+<span id="cb4-37"><a href="what-is-labelled-data.html#cb4-37"></a><span class="co">#&gt;   ..- attr(*, &quot;names&quot;)= chr [1:7] &quot;excellent&quot; &quot;good&quot; &quot;fair&quot; &quot;poor&quot; ...</span></span>
+<span id="cb4-38"><a href="what-is-labelled-data.html#cb4-38"></a><span class="kw">attributes</span>(gss_dta<span class="op">$</span>health)</span>
+<span id="cb4-39"><a href="what-is-labelled-data.html#cb4-39"></a><span class="co">#&gt; $label</span></span>
+<span id="cb4-40"><a href="what-is-labelled-data.html#cb4-40"></a><span class="co">#&gt; [1] &quot;condition of health&quot;</span></span>
+<span id="cb4-41"><a href="what-is-labelled-data.html#cb4-41"></a><span class="co">#&gt; </span></span>
+<span id="cb4-42"><a href="what-is-labelled-data.html#cb4-42"></a><span class="co">#&gt; $format.stata</span></span>
+<span id="cb4-43"><a href="what-is-labelled-data.html#cb4-43"></a><span class="co">#&gt; [1] &quot;%8.0g&quot;</span></span>
+<span id="cb4-44"><a href="what-is-labelled-data.html#cb4-44"></a><span class="co">#&gt; </span></span>
+<span id="cb4-45"><a href="what-is-labelled-data.html#cb4-45"></a><span class="co">#&gt; $class</span></span>
+<span id="cb4-46"><a href="what-is-labelled-data.html#cb4-46"></a><span class="co">#&gt; [1] &quot;haven_labelled&quot; &quot;vctrs_vctr&quot;     &quot;double&quot;        </span></span>
+<span id="cb4-47"><a href="what-is-labelled-data.html#cb4-47"></a><span class="co">#&gt; </span></span>
+<span id="cb4-48"><a href="what-is-labelled-data.html#cb4-48"></a><span class="co">#&gt; $labels</span></span>
+<span id="cb4-49"><a href="what-is-labelled-data.html#cb4-49"></a><span class="co">#&gt; excellent      good      fair      poor        DK       IAP        NA </span></span>
+<span id="cb4-50"><a href="what-is-labelled-data.html#cb4-50"></a><span class="co">#&gt;         1         2         3         4        NA        NA        NA</span></span></code></pre></div>
+<p>One immediate advantage of labelled vectors is that value labels are used in data frame printing when using <a href="https://tibble.tidyverse.org/">tibble</a> (and by extension the wider tidyverse) and other packages using the <a href="https://cran.r-project.org/web/packages/pillar/index.html">pillar</a> printing methods.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="what-is-labelled-data.html#cb5-1"></a><span class="co"># Print helpers</span></span>
+<span id="cb5-2"><a href="what-is-labelled-data.html#cb5-2"></a>gss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(HEALTH)</span>
+<span id="cb5-3"><a href="what-is-labelled-data.html#cb5-3"></a><span class="co">#&gt; # A tibble: 6 x 2</span></span>
+<span id="cb5-4"><a href="what-is-labelled-data.html#cb5-4"></a><span class="co">#&gt;          HEALTH     n</span></span>
+<span id="cb5-5"><a href="what-is-labelled-data.html#cb5-5"></a><span class="co">#&gt;       &lt;dbl+lbl&gt; &lt;int&gt;</span></span>
+<span id="cb5-6"><a href="what-is-labelled-data.html#cb5-6"></a><span class="co">#&gt; 1 0 (NA) [IAP]    774</span></span>
+<span id="cb5-7"><a href="what-is-labelled-data.html#cb5-7"></a><span class="co">#&gt; 2 1 [EXCELLENT]   359</span></span>
+<span id="cb5-8"><a href="what-is-labelled-data.html#cb5-8"></a><span class="co">#&gt; 3 2 [GOOD]        771</span></span>
+<span id="cb5-9"><a href="what-is-labelled-data.html#cb5-9"></a><span class="co">#&gt; 4 3 [FAIR]        355</span></span>
+<span id="cb5-10"><a href="what-is-labelled-data.html#cb5-10"></a><span class="co">#&gt; 5 4 [POOR]         84</span></span>
+<span id="cb5-11"><a href="what-is-labelled-data.html#cb5-11"></a><span class="co">#&gt; 6 8 (NA) [DK]       5</span></span>
+<span id="cb5-12"><a href="what-is-labelled-data.html#cb5-12"></a></span>
+<span id="cb5-13"><a href="what-is-labelled-data.html#cb5-13"></a>gss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(HELPSICK)</span>
+<span id="cb5-14"><a href="what-is-labelled-data.html#cb5-14"></a><span class="co">#&gt; # A tibble: 8 x 2</span></span>
+<span id="cb5-15"><a href="what-is-labelled-data.html#cb5-15"></a><span class="co">#&gt;                 HELPSICK     n</span></span>
+<span id="cb5-16"><a href="what-is-labelled-data.html#cb5-16"></a><span class="co">#&gt;                &lt;dbl+lbl&gt; &lt;int&gt;</span></span>
+<span id="cb5-17"><a href="what-is-labelled-data.html#cb5-17"></a><span class="co">#&gt; 1 0 (NA) [IAP]             785</span></span>
+<span id="cb5-18"><a href="what-is-labelled-data.html#cb5-18"></a><span class="co">#&gt; 2 1 [GOVT SHOULD HELP]     528</span></span>
+<span id="cb5-19"><a href="what-is-labelled-data.html#cb5-19"></a><span class="co">#&gt; 3 2                        306</span></span>
+<span id="cb5-20"><a href="what-is-labelled-data.html#cb5-20"></a><span class="co">#&gt; 4 3 [AGREE WITH BOTH]      448</span></span>
+<span id="cb5-21"><a href="what-is-labelled-data.html#cb5-21"></a><span class="co">#&gt; 5 4                        129</span></span>
+<span id="cb5-22"><a href="what-is-labelled-data.html#cb5-22"></a><span class="co">#&gt; 6 5 [PEOPLE HELP SELVES]   117</span></span>
+<span id="cb5-23"><a href="what-is-labelled-data.html#cb5-23"></a><span class="co">#&gt; 7 8 (NA) [DK]               33</span></span>
+<span id="cb5-24"><a href="what-is-labelled-data.html#cb5-24"></a><span class="co">#&gt; 8 9 (NA) [NA]                2</span></span></code></pre></div>
+<p>Using <code>head()</code> on a variable will print a nicely formatted summary of the attached metadata, excluding formats.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="what-is-labelled-data.html#cb6-1"></a><span class="kw">head</span>(gss<span class="op">$</span>HEALTH)</span>
+<span id="cb6-2"><a href="what-is-labelled-data.html#cb6-2"></a><span class="co">#&gt; &lt;labelled_spss&lt;double&gt;[6]&gt;: Condition of health</span></span>
+<span id="cb6-3"><a href="what-is-labelled-data.html#cb6-3"></a><span class="co">#&gt; [1] 2 1 0 0 1 2</span></span>
+<span id="cb6-4"><a href="what-is-labelled-data.html#cb6-4"></a><span class="co">#&gt; Missing values: 0, 8, 9</span></span>
+<span id="cb6-5"><a href="what-is-labelled-data.html#cb6-5"></a><span class="co">#&gt; </span></span>
+<span id="cb6-6"><a href="what-is-labelled-data.html#cb6-6"></a><span class="co">#&gt; Labels:</span></span>
+<span id="cb6-7"><a href="what-is-labelled-data.html#cb6-7"></a><span class="co">#&gt;  value     label</span></span>
+<span id="cb6-8"><a href="what-is-labelled-data.html#cb6-8"></a><span class="co">#&gt;      0       IAP</span></span>
+<span id="cb6-9"><a href="what-is-labelled-data.html#cb6-9"></a><span class="co">#&gt;      1 EXCELLENT</span></span>
+<span id="cb6-10"><a href="what-is-labelled-data.html#cb6-10"></a><span class="co">#&gt;      2      GOOD</span></span>
+<span id="cb6-11"><a href="what-is-labelled-data.html#cb6-11"></a><span class="co">#&gt;      3      FAIR</span></span>
+<span id="cb6-12"><a href="what-is-labelled-data.html#cb6-12"></a><span class="co">#&gt;      4      POOR</span></span>
+<span id="cb6-13"><a href="what-is-labelled-data.html#cb6-13"></a><span class="co">#&gt;      8        DK</span></span>
+<span id="cb6-14"><a href="what-is-labelled-data.html#cb6-14"></a><span class="co">#&gt;      9        NA</span></span>
+<span id="cb6-15"><a href="what-is-labelled-data.html#cb6-15"></a></span>
+<span id="cb6-16"><a href="what-is-labelled-data.html#cb6-16"></a><span class="kw">head</span>(gss_dta<span class="op">$</span>health)</span>
+<span id="cb6-17"><a href="what-is-labelled-data.html#cb6-17"></a><span class="co">#&gt; &lt;labelled&lt;double&gt;[6]&gt;: condition of health</span></span>
+<span id="cb6-18"><a href="what-is-labelled-data.html#cb6-18"></a><span class="co">#&gt; [1]     2     1 NA(i) NA(i)     1     2</span></span>
+<span id="cb6-19"><a href="what-is-labelled-data.html#cb6-19"></a><span class="co">#&gt; </span></span>
+<span id="cb6-20"><a href="what-is-labelled-data.html#cb6-20"></a><span class="co">#&gt; Labels:</span></span>
+<span id="cb6-21"><a href="what-is-labelled-data.html#cb6-21"></a><span class="co">#&gt;  value     label</span></span>
+<span id="cb6-22"><a href="what-is-labelled-data.html#cb6-22"></a><span class="co">#&gt;      1 excellent</span></span>
+<span id="cb6-23"><a href="what-is-labelled-data.html#cb6-23"></a><span class="co">#&gt;      2      good</span></span>
+<span id="cb6-24"><a href="what-is-labelled-data.html#cb6-24"></a><span class="co">#&gt;      3      fair</span></span>
+<span id="cb6-25"><a href="what-is-labelled-data.html#cb6-25"></a><span class="co">#&gt;      4      poor</span></span>
+<span id="cb6-26"><a href="what-is-labelled-data.html#cb6-26"></a><span class="co">#&gt;  NA(d)        DK</span></span>
+<span id="cb6-27"><a href="what-is-labelled-data.html#cb6-27"></a><span class="co">#&gt;  NA(i)       IAP</span></span>
+<span id="cb6-28"><a href="what-is-labelled-data.html#cb6-28"></a><span class="co">#&gt;  NA(n)        NA</span></span></code></pre></div>
+</div>
+<div id="missing-values" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Missing values</h3>
+<div id="user-defined-missing-values-spss" class="section level4">
+<h4><span class="header-section-number">3.1.2.1</span> User-defined missing values (SPSS)</h4>
+<p>SPSS allows for user-defined missing values, where the user can tag a discrete set or a range of values to be treated as missing.</p>
+<p>These are relatively simple to deal with in haven, and allow for easy differential treatment of missing values in formatting and recoding methods as we’ll see later. They get a handy <code>(NA)</code> prefix when printed in a tibble and return <code>TRUE</code> from <code>is.na()</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="what-is-labelled-data.html#cb7-1"></a><span class="co"># Missing values 0, 8 and 9</span></span>
+<span id="cb7-2"><a href="what-is-labelled-data.html#cb7-2"></a><span class="kw">head</span>(gss<span class="op">$</span>HEALTH)</span>
+<span id="cb7-3"><a href="what-is-labelled-data.html#cb7-3"></a><span class="co">#&gt; &lt;labelled_spss&lt;double&gt;[6]&gt;: Condition of health</span></span>
+<span id="cb7-4"><a href="what-is-labelled-data.html#cb7-4"></a><span class="co">#&gt; [1] 2 1 0 0 1 2</span></span>
+<span id="cb7-5"><a href="what-is-labelled-data.html#cb7-5"></a><span class="co">#&gt; Missing values: 0, 8, 9</span></span>
+<span id="cb7-6"><a href="what-is-labelled-data.html#cb7-6"></a><span class="co">#&gt; </span></span>
+<span id="cb7-7"><a href="what-is-labelled-data.html#cb7-7"></a><span class="co">#&gt; Labels:</span></span>
+<span id="cb7-8"><a href="what-is-labelled-data.html#cb7-8"></a><span class="co">#&gt;  value     label</span></span>
+<span id="cb7-9"><a href="what-is-labelled-data.html#cb7-9"></a><span class="co">#&gt;      0       IAP</span></span>
+<span id="cb7-10"><a href="what-is-labelled-data.html#cb7-10"></a><span class="co">#&gt;      1 EXCELLENT</span></span>
+<span id="cb7-11"><a href="what-is-labelled-data.html#cb7-11"></a><span class="co">#&gt;      2      GOOD</span></span>
+<span id="cb7-12"><a href="what-is-labelled-data.html#cb7-12"></a><span class="co">#&gt;      3      FAIR</span></span>
+<span id="cb7-13"><a href="what-is-labelled-data.html#cb7-13"></a><span class="co">#&gt;      4      POOR</span></span>
+<span id="cb7-14"><a href="what-is-labelled-data.html#cb7-14"></a><span class="co">#&gt;      8        DK</span></span>
+<span id="cb7-15"><a href="what-is-labelled-data.html#cb7-15"></a><span class="co">#&gt;      9        NA</span></span>
+<span id="cb7-16"><a href="what-is-labelled-data.html#cb7-16"></a></span>
+<span id="cb7-17"><a href="what-is-labelled-data.html#cb7-17"></a>gss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(HEALTH, <span class="kw">is.na</span>(HEALTH))</span>
+<span id="cb7-18"><a href="what-is-labelled-data.html#cb7-18"></a><span class="co">#&gt; # A tibble: 6 x 3</span></span>
+<span id="cb7-19"><a href="what-is-labelled-data.html#cb7-19"></a><span class="co">#&gt;          HEALTH `is.na(HEALTH)`     n</span></span>
+<span id="cb7-20"><a href="what-is-labelled-data.html#cb7-20"></a><span class="co">#&gt;       &lt;dbl+lbl&gt; &lt;lgl&gt;           &lt;int&gt;</span></span>
+<span id="cb7-21"><a href="what-is-labelled-data.html#cb7-21"></a><span class="co">#&gt; 1 0 (NA) [IAP]  TRUE              774</span></span>
+<span id="cb7-22"><a href="what-is-labelled-data.html#cb7-22"></a><span class="co">#&gt; 2 1 [EXCELLENT] FALSE             359</span></span>
+<span id="cb7-23"><a href="what-is-labelled-data.html#cb7-23"></a><span class="co">#&gt; 3 2 [GOOD]      FALSE             771</span></span>
+<span id="cb7-24"><a href="what-is-labelled-data.html#cb7-24"></a><span class="co">#&gt; 4 3 [FAIR]      FALSE             355</span></span>
+<span id="cb7-25"><a href="what-is-labelled-data.html#cb7-25"></a><span class="co">#&gt; 5 4 [POOR]      FALSE              84</span></span>
+<span id="cb7-26"><a href="what-is-labelled-data.html#cb7-26"></a><span class="co">#&gt; 6 8 (NA) [DK]   TRUE                5</span></span></code></pre></div>
+<p>One gotcha in our experience is that although they return <code>TRUE</code> from <code>is.na()</code> they are not considered equivalent to <code>NA</code> in other contexts.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="what-is-labelled-data.html#cb8-1"></a><span class="co"># These are not equivalent!</span></span>
+<span id="cb8-2"><a href="what-is-labelled-data.html#cb8-2"></a>gss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(HEALTH, <span class="kw">is.na</span>(HEALTH), HEALTH <span class="op">%in%</span><span class="st"> </span><span class="ot">NA</span>)</span>
+<span id="cb8-3"><a href="what-is-labelled-data.html#cb8-3"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
+<span id="cb8-4"><a href="what-is-labelled-data.html#cb8-4"></a><span class="co">#&gt;          HEALTH `is.na(HEALTH)` `HEALTH %in% NA`     n</span></span>
+<span id="cb8-5"><a href="what-is-labelled-data.html#cb8-5"></a><span class="co">#&gt;       &lt;dbl+lbl&gt; &lt;lgl&gt;           &lt;lgl&gt;            &lt;int&gt;</span></span>
+<span id="cb8-6"><a href="what-is-labelled-data.html#cb8-6"></a><span class="co">#&gt; 1 0 (NA) [IAP]  TRUE            FALSE              774</span></span>
+<span id="cb8-7"><a href="what-is-labelled-data.html#cb8-7"></a><span class="co">#&gt; 2 1 [EXCELLENT] FALSE           FALSE              359</span></span>
+<span id="cb8-8"><a href="what-is-labelled-data.html#cb8-8"></a><span class="co">#&gt; 3 2 [GOOD]      FALSE           FALSE              771</span></span>
+<span id="cb8-9"><a href="what-is-labelled-data.html#cb8-9"></a><span class="co">#&gt; 4 3 [FAIR]      FALSE           FALSE              355</span></span>
+<span id="cb8-10"><a href="what-is-labelled-data.html#cb8-10"></a><span class="co">#&gt; 5 4 [POOR]      FALSE           FALSE               84</span></span>
+<span id="cb8-11"><a href="what-is-labelled-data.html#cb8-11"></a><span class="co">#&gt; 6 8 (NA) [DK]   TRUE            FALSE                5</span></span></code></pre></div>
+<p>Ranges work similarly to discrete values but will exclude all missing values in the range, as you would expect.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="what-is-labelled-data.html#cb9-1"></a><span class="co"># Missing value range 13 - 99, plus discrete value 0</span></span>
+<span id="cb9-2"><a href="what-is-labelled-data.html#cb9-2"></a><span class="kw">head</span>(gss<span class="op">$</span>RINCOME)</span>
+<span id="cb9-3"><a href="what-is-labelled-data.html#cb9-3"></a><span class="co">#&gt; &lt;labelled_spss&lt;double&gt;[6]&gt;: Respondents income</span></span>
+<span id="cb9-4"><a href="what-is-labelled-data.html#cb9-4"></a><span class="co">#&gt; [1] 13  0 12 12  0  0</span></span>
+<span id="cb9-5"><a href="what-is-labelled-data.html#cb9-5"></a><span class="co">#&gt; Missing values: 0</span></span>
+<span id="cb9-6"><a href="what-is-labelled-data.html#cb9-6"></a><span class="co">#&gt; Missing range:  [13, 99]</span></span>
+<span id="cb9-7"><a href="what-is-labelled-data.html#cb9-7"></a><span class="co">#&gt; </span></span>
+<span id="cb9-8"><a href="what-is-labelled-data.html#cb9-8"></a><span class="co">#&gt; Labels:</span></span>
+<span id="cb9-9"><a href="what-is-labelled-data.html#cb9-9"></a><span class="co">#&gt;  value          label</span></span>
+<span id="cb9-10"><a href="what-is-labelled-data.html#cb9-10"></a><span class="co">#&gt;      0            IAP</span></span>
+<span id="cb9-11"><a href="what-is-labelled-data.html#cb9-11"></a><span class="co">#&gt;      1       LT $1000</span></span>
+<span id="cb9-12"><a href="what-is-labelled-data.html#cb9-12"></a><span class="co">#&gt;      2  $1000 TO 2999</span></span>
+<span id="cb9-13"><a href="what-is-labelled-data.html#cb9-13"></a><span class="co">#&gt;      3  $3000 TO 3999</span></span>
+<span id="cb9-14"><a href="what-is-labelled-data.html#cb9-14"></a><span class="co">#&gt;      4  $4000 TO 4999</span></span>
+<span id="cb9-15"><a href="what-is-labelled-data.html#cb9-15"></a><span class="co">#&gt;      5  $5000 TO 5999</span></span>
+<span id="cb9-16"><a href="what-is-labelled-data.html#cb9-16"></a><span class="co">#&gt;      6  $6000 TO 6999</span></span>
+<span id="cb9-17"><a href="what-is-labelled-data.html#cb9-17"></a><span class="co">#&gt;      7  $7000 TO 7999</span></span>
+<span id="cb9-18"><a href="what-is-labelled-data.html#cb9-18"></a><span class="co">#&gt;      8  $8000 TO 9999</span></span>
+<span id="cb9-19"><a href="what-is-labelled-data.html#cb9-19"></a><span class="co">#&gt;      9 $10000 - 14999</span></span>
+<span id="cb9-20"><a href="what-is-labelled-data.html#cb9-20"></a><span class="co">#&gt;     10 $15000 - 19999</span></span>
+<span id="cb9-21"><a href="what-is-labelled-data.html#cb9-21"></a><span class="co">#&gt;     11 $20000 - 24999</span></span>
+<span id="cb9-22"><a href="what-is-labelled-data.html#cb9-22"></a><span class="co">#&gt;     12 $25000 OR MORE</span></span>
+<span id="cb9-23"><a href="what-is-labelled-data.html#cb9-23"></a><span class="co">#&gt;     13        REFUSED</span></span>
+<span id="cb9-24"><a href="what-is-labelled-data.html#cb9-24"></a><span class="co">#&gt;     98             DK</span></span>
+<span id="cb9-25"><a href="what-is-labelled-data.html#cb9-25"></a><span class="co">#&gt;     99             NA</span></span>
+<span id="cb9-26"><a href="what-is-labelled-data.html#cb9-26"></a></span>
+<span id="cb9-27"><a href="what-is-labelled-data.html#cb9-27"></a>gss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(RINCOME, <span class="kw">is.na</span>(RINCOME))</span>
+<span id="cb9-28"><a href="what-is-labelled-data.html#cb9-28"></a><span class="co">#&gt; # A tibble: 15 x 3</span></span>
+<span id="cb9-29"><a href="what-is-labelled-data.html#cb9-29"></a><span class="co">#&gt;                RINCOME `is.na(RINCOME)`     n</span></span>
+<span id="cb9-30"><a href="what-is-labelled-data.html#cb9-30"></a><span class="co">#&gt;              &lt;dbl+lbl&gt; &lt;lgl&gt;            &lt;int&gt;</span></span>
+<span id="cb9-31"><a href="what-is-labelled-data.html#cb9-31"></a><span class="co">#&gt;  1  0 (NA) [IAP]       TRUE               899</span></span>
+<span id="cb9-32"><a href="what-is-labelled-data.html#cb9-32"></a><span class="co">#&gt;  2  1 [LT $1000]       FALSE               33</span></span>
+<span id="cb9-33"><a href="what-is-labelled-data.html#cb9-33"></a><span class="co">#&gt;  3  2 [$1000 TO 2999]  FALSE               32</span></span>
+<span id="cb9-34"><a href="what-is-labelled-data.html#cb9-34"></a><span class="co">#&gt;  4  3 [$3000 TO 3999]  FALSE               32</span></span>
+<span id="cb9-35"><a href="what-is-labelled-data.html#cb9-35"></a><span class="co">#&gt;  5  4 [$4000 TO 4999]  FALSE               21</span></span>
+<span id="cb9-36"><a href="what-is-labelled-data.html#cb9-36"></a><span class="co">#&gt;  6  5 [$5000 TO 5999]  FALSE               21</span></span>
+<span id="cb9-37"><a href="what-is-labelled-data.html#cb9-37"></a><span class="co">#&gt;  7  6 [$6000 TO 6999]  FALSE               12</span></span>
+<span id="cb9-38"><a href="what-is-labelled-data.html#cb9-38"></a><span class="co">#&gt;  8  7 [$7000 TO 7999]  FALSE               18</span></span>
+<span id="cb9-39"><a href="what-is-labelled-data.html#cb9-39"></a><span class="co">#&gt;  9  8 [$8000 TO 9999]  FALSE               33</span></span>
+<span id="cb9-40"><a href="what-is-labelled-data.html#cb9-40"></a><span class="co">#&gt; 10  9 [$10000 - 14999] FALSE               94</span></span>
+<span id="cb9-41"><a href="what-is-labelled-data.html#cb9-41"></a><span class="co">#&gt; 11 10 [$15000 - 19999] FALSE               61</span></span>
+<span id="cb9-42"><a href="what-is-labelled-data.html#cb9-42"></a><span class="co">#&gt; 12 11 [$20000 - 24999] FALSE              107</span></span>
+<span id="cb9-43"><a href="what-is-labelled-data.html#cb9-43"></a><span class="co">#&gt; 13 12 [$25000 OR MORE] FALSE              851</span></span>
+<span id="cb9-44"><a href="what-is-labelled-data.html#cb9-44"></a><span class="co">#&gt; 14 13 (NA) [REFUSED]   TRUE               108</span></span>
+<span id="cb9-45"><a href="what-is-labelled-data.html#cb9-45"></a><span class="co">#&gt; 15 98 (NA) [DK]        TRUE                26</span></span></code></pre></div>
+</div>
+<div id="tagged-missing-values-sas-stata" class="section level4">
+<h4><span class="header-section-number">3.1.2.2</span> Tagged missing values (SAS, Stata)</h4>
+<p>SAS and Stata take the opposite approach to SPSS - rather than tagging a value as missing, they tag missing data with a “type”. This is also supported by haven, albeit in a slightly different way.</p>
+<p>Tagged missing values appear in the label set as an <code>NA</code> with an attached letter flagging the type.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="what-is-labelled-data.html#cb10-1"></a><span class="kw">head</span>(gss_dta<span class="op">$</span>health)</span>
+<span id="cb10-2"><a href="what-is-labelled-data.html#cb10-2"></a><span class="co">#&gt; &lt;labelled&lt;double&gt;[6]&gt;: condition of health</span></span>
+<span id="cb10-3"><a href="what-is-labelled-data.html#cb10-3"></a><span class="co">#&gt; [1]     2     1 NA(i) NA(i)     1     2</span></span>
+<span id="cb10-4"><a href="what-is-labelled-data.html#cb10-4"></a><span class="co">#&gt; </span></span>
+<span id="cb10-5"><a href="what-is-labelled-data.html#cb10-5"></a><span class="co">#&gt; Labels:</span></span>
+<span id="cb10-6"><a href="what-is-labelled-data.html#cb10-6"></a><span class="co">#&gt;  value     label</span></span>
+<span id="cb10-7"><a href="what-is-labelled-data.html#cb10-7"></a><span class="co">#&gt;      1 excellent</span></span>
+<span id="cb10-8"><a href="what-is-labelled-data.html#cb10-8"></a><span class="co">#&gt;      2      good</span></span>
+<span id="cb10-9"><a href="what-is-labelled-data.html#cb10-9"></a><span class="co">#&gt;      3      fair</span></span>
+<span id="cb10-10"><a href="what-is-labelled-data.html#cb10-10"></a><span class="co">#&gt;      4      poor</span></span>
+<span id="cb10-11"><a href="what-is-labelled-data.html#cb10-11"></a><span class="co">#&gt;  NA(d)        DK</span></span>
+<span id="cb10-12"><a href="what-is-labelled-data.html#cb10-12"></a><span class="co">#&gt;  NA(i)       IAP</span></span>
+<span id="cb10-13"><a href="what-is-labelled-data.html#cb10-13"></a><span class="co">#&gt;  NA(n)        NA</span></span></code></pre></div>
+<p>Treatment of tagged missing values can be a bit funny compared to user-defined missing values. Note that, in the example below, doing a straight count for “IAP” does not match the SPSS example and is actually combining the “IAP” and “DK” values.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="what-is-labelled-data.html#cb11-1"></a>gss_dta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(health, <span class="kw">is.na</span>(health))</span>
+<span id="cb11-2"><a href="what-is-labelled-data.html#cb11-2"></a><span class="co">#&gt; # A tibble: 5 x 3</span></span>
+<span id="cb11-3"><a href="what-is-labelled-data.html#cb11-3"></a><span class="co">#&gt;              health `is.na(health)`     n</span></span>
+<span id="cb11-4"><a href="what-is-labelled-data.html#cb11-4"></a><span class="co">#&gt;           &lt;dbl+lbl&gt; &lt;lgl&gt;           &lt;int&gt;</span></span>
+<span id="cb11-5"><a href="what-is-labelled-data.html#cb11-5"></a><span class="co">#&gt; 1     1 [excellent] FALSE             359</span></span>
+<span id="cb11-6"><a href="what-is-labelled-data.html#cb11-6"></a><span class="co">#&gt; 2     2 [good]      FALSE             771</span></span>
+<span id="cb11-7"><a href="what-is-labelled-data.html#cb11-7"></a><span class="co">#&gt; 3     3 [fair]      FALSE             355</span></span>
+<span id="cb11-8"><a href="what-is-labelled-data.html#cb11-8"></a><span class="co">#&gt; 4     4 [poor]      FALSE              84</span></span>
+<span id="cb11-9"><a href="what-is-labelled-data.html#cb11-9"></a><span class="co">#&gt; 5 NA(i) [IAP]       TRUE              779</span></span></code></pre></div>
+<p>In many circumstances tagged <code>NA</code> values will be grouped together like this, which can be misleading, and need to be treated a bit differently.</p>
+<p>You can use <code>na_tag()</code> to extract the tagged type of the <code>NA</code> values, or <code>is_tagged_na()</code> to check for values with a particular tag.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="what-is-labelled-data.html#cb12-1"></a>gss_dta <span class="op">%&gt;%</span></span>
+<span id="cb12-2"><a href="what-is-labelled-data.html#cb12-2"></a><span class="st">  </span><span class="kw">count</span>(</span>
+<span id="cb12-3"><a href="what-is-labelled-data.html#cb12-3"></a>    health,</span>
+<span id="cb12-4"><a href="what-is-labelled-data.html#cb12-4"></a>    <span class="kw">is.na</span>(health),</span>
+<span id="cb12-5"><a href="what-is-labelled-data.html#cb12-5"></a>    <span class="kw">na_tag</span>(health)</span>
+<span id="cb12-6"><a href="what-is-labelled-data.html#cb12-6"></a>  )</span>
+<span id="cb12-7"><a href="what-is-labelled-data.html#cb12-7"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
+<span id="cb12-8"><a href="what-is-labelled-data.html#cb12-8"></a><span class="co">#&gt;              health `is.na(health)` `na_tag(health)`     n</span></span>
+<span id="cb12-9"><a href="what-is-labelled-data.html#cb12-9"></a><span class="co">#&gt;           &lt;dbl+lbl&gt; &lt;lgl&gt;           &lt;chr&gt;            &lt;int&gt;</span></span>
+<span id="cb12-10"><a href="what-is-labelled-data.html#cb12-10"></a><span class="co">#&gt; 1     1 [excellent] FALSE           &lt;NA&gt;               359</span></span>
+<span id="cb12-11"><a href="what-is-labelled-data.html#cb12-11"></a><span class="co">#&gt; 2     2 [good]      FALSE           &lt;NA&gt;               771</span></span>
+<span id="cb12-12"><a href="what-is-labelled-data.html#cb12-12"></a><span class="co">#&gt; 3     3 [fair]      FALSE           &lt;NA&gt;               355</span></span>
+<span id="cb12-13"><a href="what-is-labelled-data.html#cb12-13"></a><span class="co">#&gt; 4     4 [poor]      FALSE           &lt;NA&gt;                84</span></span>
+<span id="cb12-14"><a href="what-is-labelled-data.html#cb12-14"></a><span class="co">#&gt; 5 NA(d) [DK]        TRUE            d                    5</span></span>
+<span id="cb12-15"><a href="what-is-labelled-data.html#cb12-15"></a><span class="co">#&gt; 6 NA(i) [IAP]       TRUE            i                  774</span></span>
+<span id="cb12-16"><a href="what-is-labelled-data.html#cb12-16"></a></span>
+<span id="cb12-17"><a href="what-is-labelled-data.html#cb12-17"></a>gss_dta <span class="op">%&gt;%</span></span>
+<span id="cb12-18"><a href="what-is-labelled-data.html#cb12-18"></a><span class="st">  </span><span class="kw">count</span>(</span>
+<span id="cb12-19"><a href="what-is-labelled-data.html#cb12-19"></a>    health,</span>
+<span id="cb12-20"><a href="what-is-labelled-data.html#cb12-20"></a>    <span class="kw">na_tag</span>(health),</span>
+<span id="cb12-21"><a href="what-is-labelled-data.html#cb12-21"></a>    <span class="kw">is_tagged_na</span>(health),</span>
+<span id="cb12-22"><a href="what-is-labelled-data.html#cb12-22"></a>    <span class="kw">is_tagged_na</span>(health, <span class="st">&quot;d&quot;</span>)</span>
+<span id="cb12-23"><a href="what-is-labelled-data.html#cb12-23"></a>  )</span>
+<span id="cb12-24"><a href="what-is-labelled-data.html#cb12-24"></a><span class="co">#&gt; # A tibble: 6 x 5</span></span>
+<span id="cb12-25"><a href="what-is-labelled-data.html#cb12-25"></a><span class="co">#&gt;           health `na_tag(health)` `is_tagged_na(heal… `is_tagged_na(healt…     n</span></span>
+<span id="cb12-26"><a href="what-is-labelled-data.html#cb12-26"></a><span class="co">#&gt;        &lt;dbl+lbl&gt; &lt;chr&gt;            &lt;lgl&gt;               &lt;lgl&gt;                &lt;int&gt;</span></span>
+<span id="cb12-27"><a href="what-is-labelled-data.html#cb12-27"></a><span class="co">#&gt; 1     1 [excell… &lt;NA&gt;             FALSE               FALSE                  359</span></span>
+<span id="cb12-28"><a href="what-is-labelled-data.html#cb12-28"></a><span class="co">#&gt; 2     2 [good]   &lt;NA&gt;             FALSE               FALSE                  771</span></span>
+<span id="cb12-29"><a href="what-is-labelled-data.html#cb12-29"></a><span class="co">#&gt; 3     3 [fair]   &lt;NA&gt;             FALSE               FALSE                  355</span></span>
+<span id="cb12-30"><a href="what-is-labelled-data.html#cb12-30"></a><span class="co">#&gt; 4     4 [poor]   &lt;NA&gt;             FALSE               FALSE                   84</span></span>
+<span id="cb12-31"><a href="what-is-labelled-data.html#cb12-31"></a><span class="co">#&gt; 5 NA(d) [DK]     d                TRUE                TRUE                     5</span></span>
+<span id="cb12-32"><a href="what-is-labelled-data.html#cb12-32"></a><span class="co">#&gt; 6 NA(i) [IAP]    i                TRUE                FALSE                  774</span></span></code></pre></div>
+</div>
+<div id="zapping" class="section level4">
+<h4><span class="header-section-number">3.1.2.3</span> Zapping</h4>
+<p>To convert tagged or user-defined missing values to a standard R <code>NA</code>, you can use the <code>zap_missing()</code> function on either a vector or a data frame.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="what-is-labelled-data.html#cb13-1"></a>gss <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(HEALTH, <span class="kw">zap_missing</span>(HEALTH))</span>
+<span id="cb13-2"><a href="what-is-labelled-data.html#cb13-2"></a><span class="co">#&gt; # A tibble: 6 x 3</span></span>
+<span id="cb13-3"><a href="what-is-labelled-data.html#cb13-3"></a><span class="co">#&gt;          HEALTH `zap_missing(HEALTH)`     n</span></span>
+<span id="cb13-4"><a href="what-is-labelled-data.html#cb13-4"></a><span class="co">#&gt;       &lt;dbl+lbl&gt;             &lt;dbl+lbl&gt; &lt;int&gt;</span></span>
+<span id="cb13-5"><a href="what-is-labelled-data.html#cb13-5"></a><span class="co">#&gt; 1 0 (NA) [IAP]         NA               774</span></span>
+<span id="cb13-6"><a href="what-is-labelled-data.html#cb13-6"></a><span class="co">#&gt; 2 1 [EXCELLENT]         1 [EXCELLENT]   359</span></span>
+<span id="cb13-7"><a href="what-is-labelled-data.html#cb13-7"></a><span class="co">#&gt; 3 2 [GOOD]              2 [GOOD]        771</span></span>
+<span id="cb13-8"><a href="what-is-labelled-data.html#cb13-8"></a><span class="co">#&gt; 4 3 [FAIR]              3 [FAIR]        355</span></span>
+<span id="cb13-9"><a href="what-is-labelled-data.html#cb13-9"></a><span class="co">#&gt; 5 4 [POOR]              4 [POOR]         84</span></span>
+<span id="cb13-10"><a href="what-is-labelled-data.html#cb13-10"></a><span class="co">#&gt; 6 8 (NA) [DK]          NA                 5</span></span>
+<span id="cb13-11"><a href="what-is-labelled-data.html#cb13-11"></a></span>
+<span id="cb13-12"><a href="what-is-labelled-data.html#cb13-12"></a>gss_dta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(health, <span class="kw">na_tag</span>(health), <span class="kw">zap_missing</span>(health))</span>
+<span id="cb13-13"><a href="what-is-labelled-data.html#cb13-13"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
+<span id="cb13-14"><a href="what-is-labelled-data.html#cb13-14"></a><span class="co">#&gt;              health `na_tag(health)` `zap_missing(health)`     n</span></span>
+<span id="cb13-15"><a href="what-is-labelled-data.html#cb13-15"></a><span class="co">#&gt;           &lt;dbl+lbl&gt; &lt;chr&gt;                        &lt;dbl+lbl&gt; &lt;int&gt;</span></span>
+<span id="cb13-16"><a href="what-is-labelled-data.html#cb13-16"></a><span class="co">#&gt; 1     1 [excellent] &lt;NA&gt;                     1 [excellent]   359</span></span>
+<span id="cb13-17"><a href="what-is-labelled-data.html#cb13-17"></a><span class="co">#&gt; 2     2 [good]      &lt;NA&gt;                     2 [good]        771</span></span>
+<span id="cb13-18"><a href="what-is-labelled-data.html#cb13-18"></a><span class="co">#&gt; 3     3 [fair]      &lt;NA&gt;                     3 [fair]        355</span></span>
+<span id="cb13-19"><a href="what-is-labelled-data.html#cb13-19"></a><span class="co">#&gt; 4     4 [poor]      &lt;NA&gt;                     4 [poor]         84</span></span>
+<span id="cb13-20"><a href="what-is-labelled-data.html#cb13-20"></a><span class="co">#&gt; 5 NA(d) [DK]        d                       NA                 5</span></span>
+<span id="cb13-21"><a href="what-is-labelled-data.html#cb13-21"></a><span class="co">#&gt; 6 NA(i) [IAP]       i                       NA               774</span></span></code></pre></div>
+<p>You may recall earlier that we mentioned the <code>user_na = TRUE</code> argument for <code>read_sav()</code>. If you use <code>user_na = FALSE</code> (the default), it will convert user defined missing values to <code>NA</code> on the way in.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="what-is-labelled-data.html#cb14-1"></a><span class="kw">read_sav</span>(<span class="st">&quot;data/gss/GSS2018.sav&quot;</span>, <span class="dt">user_na =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb14-2"><a href="what-is-labelled-data.html#cb14-2"></a><span class="st">  </span><span class="kw">zap_missing</span>() <span class="op">%&gt;%</span></span>
+<span id="cb14-3"><a href="what-is-labelled-data.html#cb14-3"></a><span class="st">  </span><span class="kw">count</span>(HEALTH)</span>
+<span id="cb14-4"><a href="what-is-labelled-data.html#cb14-4"></a><span class="co">#&gt; # A tibble: 5 x 2</span></span>
+<span id="cb14-5"><a href="what-is-labelled-data.html#cb14-5"></a><span class="co">#&gt;           HEALTH     n</span></span>
+<span id="cb14-6"><a href="what-is-labelled-data.html#cb14-6"></a><span class="co">#&gt;        &lt;dbl+lbl&gt; &lt;int&gt;</span></span>
+<span id="cb14-7"><a href="what-is-labelled-data.html#cb14-7"></a><span class="co">#&gt; 1  1 [EXCELLENT]   359</span></span>
+<span id="cb14-8"><a href="what-is-labelled-data.html#cb14-8"></a><span class="co">#&gt; 2  2 [GOOD]        771</span></span>
+<span id="cb14-9"><a href="what-is-labelled-data.html#cb14-9"></a><span class="co">#&gt; 3  3 [FAIR]        355</span></span>
+<span id="cb14-10"><a href="what-is-labelled-data.html#cb14-10"></a><span class="co">#&gt; 4  4 [POOR]         84</span></span>
+<span id="cb14-11"><a href="what-is-labelled-data.html#cb14-11"></a><span class="co">#&gt; 5 NA               779</span></span>
+<span id="cb14-12"><a href="what-is-labelled-data.html#cb14-12"></a></span>
+<span id="cb14-13"><a href="what-is-labelled-data.html#cb14-13"></a><span class="kw">read_sav</span>(<span class="st">&quot;data/gss/GSS2018.sav&quot;</span>, <span class="dt">user_na =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb14-14"><a href="what-is-labelled-data.html#cb14-14"></a><span class="st">  </span><span class="kw">count</span>(HEALTH)</span>
+<span id="cb14-15"><a href="what-is-labelled-data.html#cb14-15"></a><span class="co">#&gt; # A tibble: 5 x 2</span></span>
+<span id="cb14-16"><a href="what-is-labelled-data.html#cb14-16"></a><span class="co">#&gt;           HEALTH     n</span></span>
+<span id="cb14-17"><a href="what-is-labelled-data.html#cb14-17"></a><span class="co">#&gt;        &lt;dbl+lbl&gt; &lt;int&gt;</span></span>
+<span id="cb14-18"><a href="what-is-labelled-data.html#cb14-18"></a><span class="co">#&gt; 1  1 [EXCELLENT]   359</span></span>
+<span id="cb14-19"><a href="what-is-labelled-data.html#cb14-19"></a><span class="co">#&gt; 2  2 [GOOD]        771</span></span>
+<span id="cb14-20"><a href="what-is-labelled-data.html#cb14-20"></a><span class="co">#&gt; 3  3 [FAIR]        355</span></span>
+<span id="cb14-21"><a href="what-is-labelled-data.html#cb14-21"></a><span class="co">#&gt; 4  4 [POOR]         84</span></span>
+<span id="cb14-22"><a href="what-is-labelled-data.html#cb14-22"></a><span class="co">#&gt; 5 NA               779</span></span></code></pre></div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="labelled-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="converting-labelled-vectors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/socialresearchcentre/r_survey_datasets/edit/main/03-labelled.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/socialresearchcentre/r_survey_datasets/blob/main/03-labelled.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5.2 JSON data | Survey Research Datasets and R</title>
+  <meta name="description" content="5.2 JSON data | Survey Research Datasets and R" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5.2 JSON data | Survey Research Datasets and R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://socialresearchcentre.github.io/r_survey_datasets/" />
+  
+  
+  <meta name="github-repo" content="socialresearchcentre/r_survey_datasets" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5.2 JSON data | Survey Research Datasets and R" />
+  
+  
+  
+
+<meta name="author" content="Danny Smith" />
+
+
+<meta name="date" content="2020-12-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="reading-data-directly.html"/>
+<link rel="next" href="xml-data.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Survey Research Datasets and R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="statistical-file-formats.html"><a href="statistical-file-formats.html"><i class="fa fa-check"></i><b>2</b> Statistical file formats</a><ul>
+<li class="chapter" data-level="2.1" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html"><i class="fa fa-check"></i><b>2.1</b> SPSS, SAS and Stata</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html#haven"><i class="fa fa-check"></i><b>2.1.1</b> haven</a></li>
+<li class="chapter" data-level="2.1.2" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html#foreign"><i class="fa fa-check"></i><b>2.1.2</b> foreign</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="excel.html"><a href="excel.html"><i class="fa fa-check"></i><b>2.2</b> Excel</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="labelled-data.html"><a href="labelled-data.html"><i class="fa fa-check"></i><b>3</b> Labelled data</a><ul>
+<li class="chapter" data-level="3.1" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html"><i class="fa fa-check"></i><b>3.1</b> What is labelled data?</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html#the-basics"><i class="fa fa-check"></i><b>3.1.1</b> The basics</a></li>
+<li class="chapter" data-level="3.1.2" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html#missing-values"><i class="fa fa-check"></i><b>3.1.2</b> Missing values</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html"><i class="fa fa-check"></i><b>3.2</b> Converting labelled vectors</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html#factors"><i class="fa fa-check"></i><b>3.2.1</b> Factors</a></li>
+<li class="chapter" data-level="3.2.2" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html#character-vectors"><i class="fa fa-check"></i><b>3.2.2</b> Character vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="exploring-datasets.html"><a href="exploring-datasets.html"><i class="fa fa-check"></i><b>3.3</b> Exploring datasets</a></li>
+<li class="chapter" data-level="3.4" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html"><i class="fa fa-check"></i><b>3.4</b> Labelled data in other packages</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html#frequency-tables-with-questionr"><i class="fa fa-check"></i><b>3.4.1</b> Frequency tables with <span>questionr</span></a></li>
+<li class="chapter" data-level="3.4.2" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html#tabling-with-gtsummary"><i class="fa fa-check"></i><b>3.4.2</b> Tabling with <span>gtsummary</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="accessing-databases.html"><a href="accessing-databases.html"><i class="fa fa-check"></i><b>4</b> Accessing databases</a><ul>
+<li class="chapter" data-level="4.1" data-path="dbi.html"><a href="dbi.html"><i class="fa fa-check"></i><b>4.1</b> DBI</a></li>
+<li class="chapter" data-level="4.2" data-path="dbplyr.html"><a href="dbplyr.html"><i class="fa fa-check"></i><b>4.2</b> dbplyr</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="dbplyr.html"><a href="dbplyr.html#accessing-the-database"><i class="fa fa-check"></i><b>4.2.1</b> Accessing the database</a></li>
+<li class="chapter" data-level="4.2.2" data-path="dbplyr.html"><a href="dbplyr.html#using-dplyr-verbs"><i class="fa fa-check"></i><b>4.2.2</b> Using dplyr verbs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="dbplyr.html"><a href="dbplyr.html#disclaimer"><i class="fa fa-check"></i><b>4.2.3</b> Disclaimer</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="online-data.html"><a href="online-data.html"><i class="fa fa-check"></i><b>5</b> Online data</a><ul>
+<li class="chapter" data-level="5.1" data-path="reading-data-directly.html"><a href="reading-data-directly.html"><i class="fa fa-check"></i><b>5.1</b> Reading data directly</a></li>
+<li class="chapter" data-level="5.2" data-path="json-data.html"><a href="json-data.html"><i class="fa fa-check"></i><b>5.2</b> JSON data</a></li>
+<li class="chapter" data-level="5.3" data-path="xml-data.html"><a href="xml-data.html"><i class="fa fa-check"></i><b>5.3</b> XML data</a></li>
+<li class="chapter" data-level="5.4" data-path="working-with-web-requests.html"><a href="working-with-web-requests.html"><i class="fa fa-check"></i><b>5.4</b> Working with web requests</a></li>
+<li class="chapter" data-level="5.5" data-path="downloading-files.html"><a href="downloading-files.html"><i class="fa fa-check"></i><b>5.5</b> Downloading files</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="official-statistics.html"><a href="official-statistics.html"><i class="fa fa-check"></i><b>6</b> Official statistics</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Survey Research Datasets and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="json-data" class="section level2">
+<h2><span class="header-section-number">5.2</span> JSON data</h2>
+<p>Data provided via web APIs is often made available in <a href="https://www.json.org/">JSON (JavaScript Object Notation)</a> format, a simple human readable text format for storing hierarchical data.</p>
+<p>There are a few R packages that parse JSON data, but <a href="https://cran.r-project.org/package=jsonlite">jsonlite</a> is our package of choice. Like readr and sf, jsonlite can read data directly from a URL.</p>
+<p>Data for for the following examples is sourced from the Australian Bureau of Meteorology’s <a href="http://www.bom.gov.au/products/IDV60901/IDV60901.94866.shtml">Latest Weather Observations for Melbourne Airport</a>, made available directly from their website in JSON format.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="json-data.html#cb37-1"></a><span class="co"># Bureau of Meteorology - Latest Weather Observations for Melbourne Airport</span></span>
+<span id="cb37-2"><a href="json-data.html#cb37-2"></a>bom_url &lt;-<span class="st"> &quot;http://www.bom.gov.au/fwo/IDV60901/IDV60901.94866.json&quot;</span></span>
+<span id="cb37-3"><a href="json-data.html#cb37-3"></a></span>
+<span id="cb37-4"><a href="json-data.html#cb37-4"></a>bom_data &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(bom_url)</span></code></pre></div>
+<p>jsonlite has an intuitive mapping from JSON data types to R. The object returned from the BoM site is a list containing various pieces of metadata alongside our data of interest.</p>
+<p>Check out the <a href="http://www.bom.gov.au/fwo/IDV60901/IDV60901.94866.json">original URL</a> to see the JSON data that has been mapped to this R structure.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="json-data.html#cb38-1"></a><span class="kw">str</span>(bom_data)</span>
+<span id="cb38-2"><a href="json-data.html#cb38-2"></a><span class="co">#&gt; List of 1</span></span>
+<span id="cb38-3"><a href="json-data.html#cb38-3"></a><span class="co">#&gt;  $ observations:List of 3</span></span>
+<span id="cb38-4"><a href="json-data.html#cb38-4"></a><span class="co">#&gt;   ..$ notice:&#39;data.frame&#39;:   1 obs. of  4 variables:</span></span>
+<span id="cb38-5"><a href="json-data.html#cb38-5"></a><span class="co">#&gt;   .. ..$ copyright     : chr &quot;Copyright Commonwealth of Australia 2020, Bureau of Meteorology. For more information see: http://www.bom.gov.a&quot;| __truncated__</span></span>
+<span id="cb38-6"><a href="json-data.html#cb38-6"></a><span class="co">#&gt;   .. ..$ copyright_url : chr &quot;http://www.bom.gov.au/other/copyright.shtml&quot;</span></span>
+<span id="cb38-7"><a href="json-data.html#cb38-7"></a><span class="co">#&gt;   .. ..$ disclaimer_url: chr &quot;http://www.bom.gov.au/other/disclaimer.shtml&quot;</span></span>
+<span id="cb38-8"><a href="json-data.html#cb38-8"></a><span class="co">#&gt;   .. ..$ feedback_url  : chr &quot;http://www.bom.gov.au/other/feedback&quot;</span></span>
+<span id="cb38-9"><a href="json-data.html#cb38-9"></a><span class="co">#&gt;   ..$ header:&#39;data.frame&#39;:   1 obs. of  8 variables:</span></span>
+<span id="cb38-10"><a href="json-data.html#cb38-10"></a><span class="co">#&gt;   .. ..$ refresh_message: chr &quot;Issued at  2:11 pm EDT Tuesday  1 December 2020&quot;</span></span>
+<span id="cb38-11"><a href="json-data.html#cb38-11"></a><span class="co">#&gt;   .. ..$ ID             : chr &quot;IDV60901&quot;</span></span>
+<span id="cb38-12"><a href="json-data.html#cb38-12"></a><span class="co">#&gt;   .. ..$ main_ID        : chr &quot;IDV60900&quot;</span></span>
+<span id="cb38-13"><a href="json-data.html#cb38-13"></a><span class="co">#&gt;   .. ..$ name           : chr &quot;Melbourne Airport&quot;</span></span>
+<span id="cb38-14"><a href="json-data.html#cb38-14"></a><span class="co">#&gt;   .. ..$ state_time_zone: chr &quot;VIC&quot;</span></span>
+<span id="cb38-15"><a href="json-data.html#cb38-15"></a><span class="co">#&gt;   .. ..$ time_zone      : chr &quot;EDT&quot;</span></span>
+<span id="cb38-16"><a href="json-data.html#cb38-16"></a><span class="co">#&gt;   .. ..$ product_name   : chr &quot;Capital City Observations&quot;</span></span>
+<span id="cb38-17"><a href="json-data.html#cb38-17"></a><span class="co">#&gt;   .. ..$ state          : chr &quot;Victoria&quot;</span></span>
+<span id="cb38-18"><a href="json-data.html#cb38-18"></a><span class="co">#&gt;   ..$ data  :&#39;data.frame&#39;:   161 obs. of  35 variables:</span></span>
+<span id="cb38-19"><a href="json-data.html#cb38-19"></a><span class="co">#&gt;   .. ..$ sort_order          : int [1:161] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
+<span id="cb38-20"><a href="json-data.html#cb38-20"></a><span class="co">#&gt;   .. ..$ wmo                 : int [1:161] 94866 94866 94866 94866 94866 94866 94866 94866 94866 94866 ...</span></span>
+<span id="cb38-21"><a href="json-data.html#cb38-21"></a><span class="co">#&gt;   .. ..$ name                : chr [1:161] &quot;Melbourne Airport&quot; &quot;Melbourne Airport&quot; &quot;Melbourne Airport&quot; &quot;Melbourne Airport&quot; ...</span></span>
+<span id="cb38-22"><a href="json-data.html#cb38-22"></a><span class="co">#&gt;   .. ..$ history_product     : chr [1:161] &quot;IDV60901&quot; &quot;IDV60901&quot; &quot;IDV60901&quot; &quot;IDV60901&quot; ...</span></span>
+<span id="cb38-23"><a href="json-data.html#cb38-23"></a><span class="co">#&gt;   .. ..$ local_date_time     : chr [1:161] &quot;01/02:00pm&quot; &quot;01/01:30pm&quot; &quot;01/01:00pm&quot; &quot;01/12:30pm&quot; ...</span></span>
+<span id="cb38-24"><a href="json-data.html#cb38-24"></a><span class="co">#&gt;   .. ..$ local_date_time_full: chr [1:161] &quot;20201201140000&quot; &quot;20201201133000&quot; &quot;20201201130000&quot; &quot;20201201123000&quot; ...</span></span>
+<span id="cb38-25"><a href="json-data.html#cb38-25"></a><span class="co">#&gt;   .. ..$ aifstime_utc        : chr [1:161] &quot;20201201030000&quot; &quot;20201201023000&quot; &quot;20201201020000&quot; &quot;20201201013000&quot; ...</span></span>
+<span id="cb38-26"><a href="json-data.html#cb38-26"></a><span class="co">#&gt;   .. ..$ lat                 : num [1:161] -37.7 -37.7 -37.7 -37.7 -37.7 -37.7 -37.7 -37.7 -37.7 -37.7 ...</span></span>
+<span id="cb38-27"><a href="json-data.html#cb38-27"></a><span class="co">#&gt;   .. ..$ lon                 : num [1:161] 145 145 145 145 145 ...</span></span>
+<span id="cb38-28"><a href="json-data.html#cb38-28"></a><span class="co">#&gt;   .. ..$ apparent_t          : num [1:161] 18.8 17.3 15.3 14 14.1 14.2 13.9 15.6 17.5 19.4 ...</span></span>
+<span id="cb38-29"><a href="json-data.html#cb38-29"></a><span class="co">#&gt;   .. ..$ cloud               : chr [1:161] &quot;Mostly clear&quot; &quot;Mostly clear&quot; &quot;Mostly clear&quot; &quot;Cloudy&quot; ...</span></span>
+<span id="cb38-30"><a href="json-data.html#cb38-30"></a><span class="co">#&gt;   .. ..$ cloud_base_m        : int [1:161] 600 600 600 3300 3300 2610 2500 1110 1110 2340 ...</span></span>
+<span id="cb38-31"><a href="json-data.html#cb38-31"></a><span class="co">#&gt;   .. ..$ cloud_oktas         : int [1:161] 1 1 1 8 8 3 8 1 1 3 ...</span></span>
+<span id="cb38-32"><a href="json-data.html#cb38-32"></a><span class="co">#&gt;   .. ..$ cloud_type_id       : int [1:161] 6 6 6 NA NA NA 35 6 6 NA ...</span></span>
+<span id="cb38-33"><a href="json-data.html#cb38-33"></a><span class="co">#&gt;   .. ..$ cloud_type          : chr [1:161] &quot;Stratocumulus&quot; &quot;Stratocumulus&quot; &quot;Stratocumulus&quot; &quot;-&quot; ...</span></span>
+<span id="cb38-34"><a href="json-data.html#cb38-34"></a><span class="co">#&gt;   .. ..$ delta_t             : num [1:161] 4.5 4 3.2 2.7 2.8 3.3 3.6 7.5 7.4 7.7 ...</span></span>
+<span id="cb38-35"><a href="json-data.html#cb38-35"></a><span class="co">#&gt;   .. ..$ gust_kmh            : int [1:161] 33 33 39 39 37 52 52 59 50 59 ...</span></span>
+<span id="cb38-36"><a href="json-data.html#cb38-36"></a><span class="co">#&gt;   .. ..$ gust_kt             : int [1:161] 18 18 21 21 20 28 28 32 27 32 ...</span></span>
+<span id="cb38-37"><a href="json-data.html#cb38-37"></a><span class="co">#&gt;   .. ..$ air_temp            : num [1:161] 21.7 20.4 19.4 18.5 18.6 19.3 19.5 23.1 24.2 25 ...</span></span>
+<span id="cb38-38"><a href="json-data.html#cb38-38"></a><span class="co">#&gt;   .. ..$ dewpt               : num [1:161] 14 13.5 13.9 13.8 13.7 13.6 13.2 9.3 11.1 11.5 ...</span></span>
+<span id="cb38-39"><a href="json-data.html#cb38-39"></a><span class="co">#&gt;   .. ..$ press               : num [1:161] 1005 1006 1005 1004 1004 ...</span></span>
+<span id="cb38-40"><a href="json-data.html#cb38-40"></a><span class="co">#&gt;   .. ..$ press_qnh           : num [1:161] 1006 1006 1005 1005 1005 ...</span></span>
+<span id="cb38-41"><a href="json-data.html#cb38-41"></a><span class="co">#&gt;   .. ..$ press_msl           : num [1:161] 1005 1006 1005 1004 1004 ...</span></span>
+<span id="cb38-42"><a href="json-data.html#cb38-42"></a><span class="co">#&gt;   .. ..$ press_tend          : chr [1:161] &quot;-&quot; &quot;-&quot; &quot;-&quot; &quot;-&quot; ...</span></span>
+<span id="cb38-43"><a href="json-data.html#cb38-43"></a><span class="co">#&gt;   .. ..$ rain_trace          : chr [1:161] &quot;0.0&quot; &quot;0.0&quot; &quot;0.0&quot; &quot;0.0&quot; ...</span></span>
+<span id="cb38-44"><a href="json-data.html#cb38-44"></a><span class="co">#&gt;   .. ..$ rel_hum             : int [1:161] 61 64 70 74 73 69 67 41 43 42 ...</span></span>
+<span id="cb38-45"><a href="json-data.html#cb38-45"></a><span class="co">#&gt;   .. ..$ sea_state           : chr [1:161] &quot;-&quot; &quot;-&quot; &quot;-&quot; &quot;-&quot; ...</span></span>
+<span id="cb38-46"><a href="json-data.html#cb38-46"></a><span class="co">#&gt;   .. ..$ swell_dir_worded    : chr [1:161] &quot;-&quot; &quot;-&quot; &quot;-&quot; &quot;-&quot; ...</span></span>
+<span id="cb38-47"><a href="json-data.html#cb38-47"></a><span class="co">#&gt;   .. ..$ swell_height        : logi [1:161] NA NA NA NA NA NA ...</span></span>
+<span id="cb38-48"><a href="json-data.html#cb38-48"></a><span class="co">#&gt;   .. ..$ swell_period        : logi [1:161] NA NA NA NA NA NA ...</span></span>
+<span id="cb38-49"><a href="json-data.html#cb38-49"></a><span class="co">#&gt;   .. ..$ vis_km              : chr [1:161] &quot;10&quot; &quot;10&quot; &quot;10&quot; &quot;10&quot; ...</span></span>
+<span id="cb38-50"><a href="json-data.html#cb38-50"></a><span class="co">#&gt;   .. ..$ weather             : chr [1:161] &quot;-&quot; &quot;-&quot; &quot;-&quot; &quot;Showers&quot; ...</span></span>
+<span id="cb38-51"><a href="json-data.html#cb38-51"></a><span class="co">#&gt;   .. ..$ wind_dir            : chr [1:161] &quot;N&quot; &quot;NNW&quot; &quot;N&quot; &quot;NNE&quot; ...</span></span>
+<span id="cb38-52"><a href="json-data.html#cb38-52"></a><span class="co">#&gt;   .. ..$ wind_spd_kmh        : int [1:161] 22 22 28 30 30 33 35 39 37 32 ...</span></span>
+<span id="cb38-53"><a href="json-data.html#cb38-53"></a><span class="co">#&gt;   .. ..$ wind_spd_kt         : int [1:161] 12 12 15 16 16 18 19 21 20 17 ...</span></span></code></pre></div>
+<p>JSON data is often hierarchically structured or nested in this way, and you’ll need to work your way through the structure to get to the data you need.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="json-data.html#cb39-1"></a><span class="kw">class</span>(bom_data)</span>
+<span id="cb39-2"><a href="json-data.html#cb39-2"></a><span class="co">#&gt; [1] &quot;list&quot;</span></span>
+<span id="cb39-3"><a href="json-data.html#cb39-3"></a><span class="kw">names</span>(bom_data)</span>
+<span id="cb39-4"><a href="json-data.html#cb39-4"></a><span class="co">#&gt; [1] &quot;observations&quot;</span></span>
+<span id="cb39-5"><a href="json-data.html#cb39-5"></a><span class="kw">names</span>(bom_data<span class="op">$</span>observations)</span>
+<span id="cb39-6"><a href="json-data.html#cb39-6"></a><span class="co">#&gt; [1] &quot;notice&quot; &quot;header&quot; &quot;data&quot;</span></span>
+<span id="cb39-7"><a href="json-data.html#cb39-7"></a></span>
+<span id="cb39-8"><a href="json-data.html#cb39-8"></a><span class="kw">class</span>(bom_data<span class="op">$</span>observations<span class="op">$</span>data)</span>
+<span id="cb39-9"><a href="json-data.html#cb39-9"></a><span class="co">#&gt; [1] &quot;data.frame&quot;</span></span>
+<span id="cb39-10"><a href="json-data.html#cb39-10"></a>bom_data<span class="op">$</span>observations<span class="op">$</span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</span>
+<span id="cb39-11"><a href="json-data.html#cb39-11"></a><span class="co">#&gt; # A tibble: 161 x 35</span></span>
+<span id="cb39-12"><a href="json-data.html#cb39-12"></a><span class="co">#&gt;    sort_order   wmo name  history_product local_date_time local_date_time…</span></span>
+<span id="cb39-13"><a href="json-data.html#cb39-13"></a><span class="co">#&gt;         &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;           </span></span>
+<span id="cb39-14"><a href="json-data.html#cb39-14"></a><span class="co">#&gt;  1          0 94866 Melb… IDV60901        01/02:00pm      20201201140000  </span></span>
+<span id="cb39-15"><a href="json-data.html#cb39-15"></a><span class="co">#&gt;  2          1 94866 Melb… IDV60901        01/01:30pm      20201201133000  </span></span>
+<span id="cb39-16"><a href="json-data.html#cb39-16"></a><span class="co">#&gt;  3          2 94866 Melb… IDV60901        01/01:00pm      20201201130000  </span></span>
+<span id="cb39-17"><a href="json-data.html#cb39-17"></a><span class="co">#&gt;  4          3 94866 Melb… IDV60901        01/12:30pm      20201201123000  </span></span>
+<span id="cb39-18"><a href="json-data.html#cb39-18"></a><span class="co">#&gt;  5          4 94866 Melb… IDV60901        01/12:27pm      20201201122700  </span></span>
+<span id="cb39-19"><a href="json-data.html#cb39-19"></a><span class="co">#&gt;  6          5 94866 Melb… IDV60901        01/12:03pm      20201201120300  </span></span>
+<span id="cb39-20"><a href="json-data.html#cb39-20"></a><span class="co">#&gt;  7          6 94866 Melb… IDV60901        01/12:00pm      20201201120000  </span></span>
+<span id="cb39-21"><a href="json-data.html#cb39-21"></a><span class="co">#&gt;  8          7 94866 Melb… IDV60901        01/11:37am      20201201113700  </span></span>
+<span id="cb39-22"><a href="json-data.html#cb39-22"></a><span class="co">#&gt;  9          8 94866 Melb… IDV60901        01/11:30am      20201201113000  </span></span>
+<span id="cb39-23"><a href="json-data.html#cb39-23"></a><span class="co">#&gt; 10          9 94866 Melb… IDV60901        01/11:14am      20201201111400  </span></span>
+<span id="cb39-24"><a href="json-data.html#cb39-24"></a><span class="co">#&gt; # … with 151 more rows, and 29 more variables: aifstime_utc &lt;chr&gt;, lat &lt;dbl&gt;,</span></span>
+<span id="cb39-25"><a href="json-data.html#cb39-25"></a><span class="co">#&gt; #   lon &lt;dbl&gt;, apparent_t &lt;dbl&gt;, cloud &lt;chr&gt;, cloud_base_m &lt;int&gt;,</span></span>
+<span id="cb39-26"><a href="json-data.html#cb39-26"></a><span class="co">#&gt; #   cloud_oktas &lt;int&gt;, cloud_type_id &lt;int&gt;, cloud_type &lt;chr&gt;, delta_t &lt;dbl&gt;,</span></span>
+<span id="cb39-27"><a href="json-data.html#cb39-27"></a><span class="co">#&gt; #   gust_kmh &lt;int&gt;, gust_kt &lt;int&gt;, air_temp &lt;dbl&gt;, dewpt &lt;dbl&gt;, press &lt;dbl&gt;,</span></span>
+<span id="cb39-28"><a href="json-data.html#cb39-28"></a><span class="co">#&gt; #   press_qnh &lt;dbl&gt;, press_msl &lt;dbl&gt;, press_tend &lt;chr&gt;, rain_trace &lt;chr&gt;,</span></span>
+<span id="cb39-29"><a href="json-data.html#cb39-29"></a><span class="co">#&gt; #   rel_hum &lt;int&gt;, sea_state &lt;chr&gt;, swell_dir_worded &lt;chr&gt;, swell_height &lt;lgl&gt;,</span></span>
+<span id="cb39-30"><a href="json-data.html#cb39-30"></a><span class="co">#&gt; #   swell_period &lt;lgl&gt;, vis_km &lt;chr&gt;, weather &lt;chr&gt;, wind_dir &lt;chr&gt;,</span></span>
+<span id="cb39-31"><a href="json-data.html#cb39-31"></a><span class="co">#&gt; #   wind_spd_kmh &lt;int&gt;, wind_spd_kt &lt;int&gt;</span></span></code></pre></div>
+<p>Just for fun, here’s the temperature as a line graph.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="json-data.html#cb40-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb40-2"><a href="json-data.html#cb40-2"></a>bom_data<span class="op">$</span>observations<span class="op">$</span>data <span class="op">%&gt;%</span></span>
+<span id="cb40-3"><a href="json-data.html#cb40-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lubridate<span class="op">::</span><span class="kw">as_datetime</span>(local_date_time_full), <span class="dt">y =</span> apparent_t)) <span class="op">+</span></span>
+<span id="cb40-4"><a href="json-data.html#cb40-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb40-5"><a href="json-data.html#cb40-5"></a><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></span>
+<span id="cb40-6"><a href="json-data.html#cb40-6"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb40-7"><a href="json-data.html#cb40-7"></a>        <span class="dt">axis.title =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb40-8"><a href="json-data.html#cb40-8"></a>        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></span>
+<span id="cb40-9"><a href="json-data.html#cb40-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Melbourne Airport, Apparent Temperature (celsius)&quot;</span>,</span>
+<span id="cb40-10"><a href="json-data.html#cb40-10"></a>       <span class="dt">caption =</span> <span class="st">&quot;Source: Bureau of Meteorology&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="reading-data-directly.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="xml-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/socialresearchcentre/r_survey_datasets/edit/main/05-online-data.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/socialresearchcentre/r_survey_datasets/blob/main/05-online-data.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4.2 dbplyr | Survey Research Datasets and R</title>
+  <meta name="description" content="4.2 dbplyr | Survey Research Datasets and R" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4.2 dbplyr | Survey Research Datasets and R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://socialresearchcentre.github.io/r_survey_datasets/" />
+  
+  
+  <meta name="github-repo" content="socialresearchcentre/r_survey_datasets" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4.2 dbplyr | Survey Research Datasets and R" />
+  
+  
+  
+
+<meta name="author" content="Danny Smith" />
+
+
+<meta name="date" content="2020-12-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="dbi.html"/>
+<link rel="next" href="online-data.html"/>
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block/empty-anchor.js"></script>
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Survey Research Datasets and R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="statistical-file-formats.html"><a href="statistical-file-formats.html"><i class="fa fa-check"></i><b>2</b> Statistical file formats</a><ul>
+<li class="chapter" data-level="2.1" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html"><i class="fa fa-check"></i><b>2.1</b> SPSS, SAS and Stata</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html#haven"><i class="fa fa-check"></i><b>2.1.1</b> haven</a></li>
+<li class="chapter" data-level="2.1.2" data-path="spss-sas-and-stata.html"><a href="spss-sas-and-stata.html#foreign"><i class="fa fa-check"></i><b>2.1.2</b> foreign</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="excel.html"><a href="excel.html"><i class="fa fa-check"></i><b>2.2</b> Excel</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="labelled-data.html"><a href="labelled-data.html"><i class="fa fa-check"></i><b>3</b> Labelled data</a><ul>
+<li class="chapter" data-level="3.1" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html"><i class="fa fa-check"></i><b>3.1</b> What is labelled data?</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html#the-basics"><i class="fa fa-check"></i><b>3.1.1</b> The basics</a></li>
+<li class="chapter" data-level="3.1.2" data-path="what-is-labelled-data.html"><a href="what-is-labelled-data.html#missing-values"><i class="fa fa-check"></i><b>3.1.2</b> Missing values</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html"><i class="fa fa-check"></i><b>3.2</b> Converting labelled vectors</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html#factors"><i class="fa fa-check"></i><b>3.2.1</b> Factors</a></li>
+<li class="chapter" data-level="3.2.2" data-path="converting-labelled-vectors.html"><a href="converting-labelled-vectors.html#character-vectors"><i class="fa fa-check"></i><b>3.2.2</b> Character vectors</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="exploring-datasets.html"><a href="exploring-datasets.html"><i class="fa fa-check"></i><b>3.3</b> Exploring datasets</a></li>
+<li class="chapter" data-level="3.4" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html"><i class="fa fa-check"></i><b>3.4</b> Labelled data in other packages</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html#frequency-tables-with-questionr"><i class="fa fa-check"></i><b>3.4.1</b> Frequency tables with <span>questionr</span></a></li>
+<li class="chapter" data-level="3.4.2" data-path="labelled-data-in-other-packages.html"><a href="labelled-data-in-other-packages.html#tabling-with-gtsummary"><i class="fa fa-check"></i><b>3.4.2</b> Tabling with <span>gtsummary</span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="accessing-databases.html"><a href="accessing-databases.html"><i class="fa fa-check"></i><b>4</b> Accessing databases</a><ul>
+<li class="chapter" data-level="4.1" data-path="dbi.html"><a href="dbi.html"><i class="fa fa-check"></i><b>4.1</b> DBI</a></li>
+<li class="chapter" data-level="4.2" data-path="dbplyr.html"><a href="dbplyr.html"><i class="fa fa-check"></i><b>4.2</b> dbplyr</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="dbplyr.html"><a href="dbplyr.html#accessing-the-database"><i class="fa fa-check"></i><b>4.2.1</b> Accessing the database</a></li>
+<li class="chapter" data-level="4.2.2" data-path="dbplyr.html"><a href="dbplyr.html#using-dplyr-verbs"><i class="fa fa-check"></i><b>4.2.2</b> Using dplyr verbs</a></li>
+<li class="chapter" data-level="4.2.3" data-path="dbplyr.html"><a href="dbplyr.html#disclaimer"><i class="fa fa-check"></i><b>4.2.3</b> Disclaimer</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="online-data.html"><a href="online-data.html"><i class="fa fa-check"></i><b>5</b> Online data</a><ul>
+<li class="chapter" data-level="5.1" data-path="reading-data-directly.html"><a href="reading-data-directly.html"><i class="fa fa-check"></i><b>5.1</b> Reading data directly</a></li>
+<li class="chapter" data-level="5.2" data-path="json-data.html"><a href="json-data.html"><i class="fa fa-check"></i><b>5.2</b> JSON data</a></li>
+<li class="chapter" data-level="5.3" data-path="xml-data.html"><a href="xml-data.html"><i class="fa fa-check"></i><b>5.3</b> XML data</a></li>
+<li class="chapter" data-level="5.4" data-path="working-with-web-requests.html"><a href="working-with-web-requests.html"><i class="fa fa-check"></i><b>5.4</b> Working with web requests</a></li>
+<li class="chapter" data-level="5.5" data-path="downloading-files.html"><a href="downloading-files.html"><i class="fa fa-check"></i><b>5.5</b> Downloading files</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="official-statistics.html"><a href="official-statistics.html"><i class="fa fa-check"></i><b>6</b> Official statistics</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Survey Research Datasets and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dbplyr" class="section level2">
+<h2><span class="header-section-number">4.2</span> dbplyr</h2>
+<p>dbplyr is an extension package for dplyr that allows us to access database tables <em>as if they were R data frames</em>. This essentially means we can access a database without directly bulding SQL queries in our code, which can make working with database tables much cleaner and easier to follow.</p>
+<p>There are some simple examples below to give you the gist, but for a more detailed rundown we’d recommend the <a href="https://dbplyr.tidyverse.org/articles/dbplyr.html">Introduction to dbplyr</a> vignette.</p>
+<div id="accessing-the-database" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Accessing the database</h3>
+<p>Since these examples are intended for public consumption we can’t use a “real” external database. Fortunately, since DBI is a generic frontend we can use any backend for demonstration purposes.</p>
+<p>First, we’ll create an <a href="https://sqlite.org/index.html">SQLite</a> database in memory from the <code>gss</code> dataset. Note that this will lose all the label metadata, since SQL tables do not support attributes or extended R classes.</p>
+<p>If you’re using a different type of database, the <code>dbConnect()</code> call will look a bit different - this function specifies the driver and connection parameters for the database we’re connecting to.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="dbplyr.html#cb28-1"></a>gss &lt;-<span class="st"> </span>haven<span class="op">::</span><span class="kw">read_sav</span>(<span class="st">&quot;data/gss/GSS2018.sav&quot;</span>, <span class="dt">user_na =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb28-2"><a href="dbplyr.html#cb28-2"></a></span>
+<span id="cb28-3"><a href="dbplyr.html#cb28-3"></a><span class="co"># Connect to a temporary SQLite database in memory</span></span>
+<span id="cb28-4"><a href="dbplyr.html#cb28-4"></a>con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RSQLite<span class="op">::</span><span class="kw">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
+<span id="cb28-5"><a href="dbplyr.html#cb28-5"></a></span>
+<span id="cb28-6"><a href="dbplyr.html#cb28-6"></a><span class="co"># Write the gss dataset to a new table &quot;gss&quot; in the database</span></span>
+<span id="cb28-7"><a href="dbplyr.html#cb28-7"></a>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</span>
+<span id="cb28-8"><a href="dbplyr.html#cb28-8"></a><span class="co">#&gt; character(0)</span></span>
+<span id="cb28-9"><a href="dbplyr.html#cb28-9"></a>DBI<span class="op">::</span><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;gss&quot;</span>, gss)</span>
+<span id="cb28-10"><a href="dbplyr.html#cb28-10"></a>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</span>
+<span id="cb28-11"><a href="dbplyr.html#cb28-11"></a><span class="co">#&gt; [1] &quot;gss&quot;</span></span></code></pre></div>
+<p>dplyr allows us to reference a database table as a tibble using the <code>tbl()</code> function. Once we’re connected to a database, it’s simple to create a reference to a SQL table with the <code>tbl()</code> function, using this database connection and the name of the table.</p>
+<p>Since a DBI connection (our <code>con</code> object) is used in the <code>tbl()</code> function, dplyr knows to use the database functionality provided by dbplyr and DBI to access this data.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="dbplyr.html#cb29-1"></a><span class="kw">library</span>(dplyr, <span class="dt">warn.conflicts =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb29-2"><a href="dbplyr.html#cb29-2"></a></span>
+<span id="cb29-3"><a href="dbplyr.html#cb29-3"></a>gss_db &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;gss&quot;</span>)</span>
+<span id="cb29-4"><a href="dbplyr.html#cb29-4"></a>gss_db</span>
+<span id="cb29-5"><a href="dbplyr.html#cb29-5"></a><span class="co">#&gt; # Source:   table&lt;gss&gt; [?? x 1,065]</span></span>
+<span id="cb29-6"><a href="dbplyr.html#cb29-6"></a><span class="co">#&gt; # Database: sqlite 3.33.0 [:memory:]</span></span>
+<span id="cb29-7"><a href="dbplyr.html#cb29-7"></a><span class="co">#&gt;    ABANY ABDEFECT ABFELEGL ABHELP1 ABHELP2 ABHELP3 ABHELP4 ABHLTH ABINSPAY</span></span>
+<span id="cb29-8"><a href="dbplyr.html#cb29-8"></a><span class="co">#&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb29-9"><a href="dbplyr.html#cb29-9"></a><span class="co">#&gt;  1     2        1        0       1       1       1       1      1        1</span></span>
+<span id="cb29-10"><a href="dbplyr.html#cb29-10"></a><span class="co">#&gt;  2     1        1        3       2       2       2       2      1        2</span></span>
+<span id="cb29-11"><a href="dbplyr.html#cb29-11"></a><span class="co">#&gt;  3     0        0        0       1       2       1       1      0        2</span></span>
+<span id="cb29-12"><a href="dbplyr.html#cb29-12"></a><span class="co">#&gt;  4     0        0        1       1       1       1       1      0        1</span></span>
+<span id="cb29-13"><a href="dbplyr.html#cb29-13"></a><span class="co">#&gt;  5     2        1        0       2       2       2       1      1        2</span></span>
+<span id="cb29-14"><a href="dbplyr.html#cb29-14"></a><span class="co">#&gt;  6     1        1        1       1       1       1       1      1        1</span></span>
+<span id="cb29-15"><a href="dbplyr.html#cb29-15"></a><span class="co">#&gt;  7     1        1        3       1       2       1       1      1        1</span></span>
+<span id="cb29-16"><a href="dbplyr.html#cb29-16"></a><span class="co">#&gt;  8     2        1        0       1       2       1       1      1        9</span></span>
+<span id="cb29-17"><a href="dbplyr.html#cb29-17"></a><span class="co">#&gt;  9     0        0        3       1       1       1       1      0        1</span></span>
+<span id="cb29-18"><a href="dbplyr.html#cb29-18"></a><span class="co">#&gt; 10     0        0        0       1       2       2       1      0        2</span></span>
+<span id="cb29-19"><a href="dbplyr.html#cb29-19"></a><span class="co">#&gt; # … with more rows, and 1,056 more variables: ABMEDGOV1 &lt;dbl&gt;, ABMEDGOV2 &lt;dbl&gt;,</span></span>
+<span id="cb29-20"><a href="dbplyr.html#cb29-20"></a><span class="co">#&gt; #   ABMELEGL &lt;dbl&gt;, ABMORAL &lt;dbl&gt;, ABNOMORE &lt;dbl&gt;, ABPOOR &lt;dbl&gt;, ABPOORW &lt;dbl&gt;,</span></span>
+<span id="cb29-21"><a href="dbplyr.html#cb29-21"></a><span class="co">#&gt; #   ABRAPE &lt;dbl&gt;, ABSINGLE &lt;dbl&gt;, ABSTATE1 &lt;dbl&gt;, ABSTATE2 &lt;dbl&gt;,</span></span>
+<span id="cb29-22"><a href="dbplyr.html#cb29-22"></a><span class="co">#&gt; #   ACQNTSEX &lt;dbl&gt;, ACTSSOC &lt;dbl&gt;, ADMINCONSENT &lt;dbl&gt;, ADULTS &lt;dbl&gt;,</span></span>
+<span id="cb29-23"><a href="dbplyr.html#cb29-23"></a><span class="co">#&gt; #   ADVFRONT &lt;dbl&gt;, AFFRMACT &lt;dbl&gt;, AFRAIDOF &lt;dbl&gt;, AFTERLIF &lt;dbl&gt;, AGE &lt;dbl&gt;,</span></span>
+<span id="cb29-24"><a href="dbplyr.html#cb29-24"></a><span class="co">#&gt; #   AGED &lt;dbl&gt;, AGEKDBRN &lt;dbl&gt;, ANCESTRS &lt;dbl&gt;, ARTHRTIS &lt;dbl&gt;, ASTROLGY &lt;dbl&gt;,</span></span>
+<span id="cb29-25"><a href="dbplyr.html#cb29-25"></a><span class="co">#&gt; #   ASTROSCI &lt;dbl&gt;, ATHEISTS &lt;dbl&gt;, ATTEND &lt;dbl&gt;, ATTEND12 &lt;dbl&gt;,</span></span>
+<span id="cb29-26"><a href="dbplyr.html#cb29-26"></a><span class="co">#&gt; #   ATTENDMA &lt;dbl&gt;, ATTENDPA &lt;dbl&gt;, AWAY1 &lt;dbl&gt;, AWAY11 &lt;dbl&gt;, AWAY2 &lt;dbl&gt;,</span></span>
+<span id="cb29-27"><a href="dbplyr.html#cb29-27"></a><span class="co">#&gt; #   AWAY3 &lt;dbl&gt;, AWAY4 &lt;dbl&gt;, AWAY5 &lt;dbl&gt;, AWAY6 &lt;dbl&gt;, AWAY7 &lt;dbl&gt;,</span></span>
+<span id="cb29-28"><a href="dbplyr.html#cb29-28"></a><span class="co">#&gt; #   BABIES &lt;dbl&gt;, BACKPAIN &lt;dbl&gt;, BALLOT &lt;dbl&gt;, BALNEG &lt;dbl&gt;, BALPOS &lt;dbl&gt;,</span></span>
+<span id="cb29-29"><a href="dbplyr.html#cb29-29"></a><span class="co">#&gt; #   BEFAIR &lt;dbl&gt;, BETRLANG &lt;dbl&gt;, BIBLE &lt;dbl&gt;, BIGBANG &lt;dbl&gt;, BIGBANG1 &lt;dbl&gt;,</span></span>
+<span id="cb29-30"><a href="dbplyr.html#cb29-30"></a><span class="co">#&gt; #   BIGBANG2 &lt;dbl&gt;, BIRD &lt;dbl&gt;, BIRDB4 &lt;dbl&gt;, BORN &lt;dbl&gt;, BOYORGRL &lt;dbl&gt;,</span></span>
+<span id="cb29-31"><a href="dbplyr.html#cb29-31"></a><span class="co">#&gt; #   BREAKDWN &lt;dbl&gt;, BUDDHSTS &lt;dbl&gt;, BUYESOP &lt;dbl&gt;, BUYVALUE &lt;dbl&gt;,</span></span>
+<span id="cb29-32"><a href="dbplyr.html#cb29-32"></a><span class="co">#&gt; #   CANTRUST &lt;dbl&gt;, CAPPUN &lt;dbl&gt;, CAT &lt;dbl&gt;, CATB4 &lt;dbl&gt;, CHARACTR &lt;dbl&gt;,</span></span>
+<span id="cb29-33"><a href="dbplyr.html#cb29-33"></a><span class="co">#&gt; #   CHEMGEN &lt;dbl&gt;, CHILDS &lt;dbl&gt;, CHLDIDEL &lt;dbl&gt;, CHRISTNS &lt;dbl&gt;,</span></span>
+<span id="cb29-34"><a href="dbplyr.html#cb29-34"></a><span class="co">#&gt; #   CHURHPOW &lt;dbl&gt;, CLASS &lt;dbl&gt;, CLERGVTE &lt;dbl&gt;, CLOSETO1 &lt;dbl&gt;,</span></span>
+<span id="cb29-35"><a href="dbplyr.html#cb29-35"></a><span class="co">#&gt; #   CLOSETO2 &lt;dbl&gt;, CLOSETO3 &lt;dbl&gt;, CLOSETO4 &lt;dbl&gt;, CLOSETO5 &lt;dbl&gt;,</span></span>
+<span id="cb29-36"><a href="dbplyr.html#cb29-36"></a><span class="co">#&gt; #   CNTCTFAM &lt;dbl&gt;, CNTCTFRD &lt;dbl&gt;, CNTCTKID &lt;dbl&gt;, CNTCTPAR &lt;dbl&gt;,</span></span>
+<span id="cb29-37"><a href="dbplyr.html#cb29-37"></a><span class="co">#&gt; #   CNTCTSIB &lt;dbl&gt;, CODEG &lt;dbl&gt;, CODEN &lt;dbl&gt;, COEDUC &lt;dbl&gt;, COEVWORK &lt;dbl&gt;,</span></span>
+<span id="cb29-38"><a href="dbplyr.html#cb29-38"></a><span class="co">#&gt; #   COFUND &lt;dbl&gt;, COHORT &lt;dbl&gt;, COHRS1 &lt;dbl&gt;, COHRS2 &lt;dbl&gt;, COIND10 &lt;dbl&gt;,</span></span>
+<span id="cb29-39"><a href="dbplyr.html#cb29-39"></a><span class="co">#&gt; #   COISCO08 &lt;dbl&gt;, COJew &lt;dbl&gt;, COLATH &lt;dbl&gt;, COLCOM &lt;dbl&gt;, COLDEG1 &lt;dbl&gt;,</span></span>
+<span id="cb29-40"><a href="dbplyr.html#cb29-40"></a><span class="co">#&gt; #   COLHOMO &lt;dbl&gt;, COLMIL &lt;dbl&gt;, COLMSLM &lt;dbl&gt;, COLRAC &lt;dbl&gt;, COLSCI &lt;dbl&gt;,</span></span>
+<span id="cb29-41"><a href="dbplyr.html#cb29-41"></a><span class="co">#&gt; #   COLSCINM &lt;dbl&gt;, …</span></span></code></pre></div>
+<p>On first glance <code>gss_db</code> acts and looks like a tibble, but it’s actually quite different. You’ll notice in the example above that the data source is listed in the header, but with an unknown (<code>??</code>) number of rows:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="dbplyr.html#cb30-1"></a><span class="co"># Source:   table&lt;gss&gt; [?? x 1,065]</span></span>
+<span id="cb30-2"><a href="dbplyr.html#cb30-2"></a><span class="co"># Database: sqlite 3.33.0 [:memory:]</span></span></code></pre></div>
+<p>The <code>gss_db</code> object is not actually a data frame, but a database connection that pretends to be one. If we look at the class list we’ll see that the original <code>gss</code> dataset is a data frame underneath the tibble, but our database connection is something else.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="dbplyr.html#cb31-1"></a><span class="kw">class</span>(gss)</span>
+<span id="cb31-2"><a href="dbplyr.html#cb31-2"></a><span class="co">#&gt; [1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</span></span>
+<span id="cb31-3"><a href="dbplyr.html#cb31-3"></a></span>
+<span id="cb31-4"><a href="dbplyr.html#cb31-4"></a><span class="kw">class</span>(gss_db)</span>
+<span id="cb31-5"><a href="dbplyr.html#cb31-5"></a><span class="co">#&gt; [1] &quot;tbl_SQLiteConnection&quot; &quot;tbl_dbi&quot;              &quot;tbl_sql&quot;             </span></span>
+<span id="cb31-6"><a href="dbplyr.html#cb31-6"></a><span class="co">#&gt; [4] &quot;tbl_lazy&quot;             &quot;tbl&quot;</span></span></code></pre></div>
+<p>So although our <code>gss_db</code> object looks like a data frame, it isn’t one. Operations that you can run on a normal data frame won’t necessarily work on a database tibble.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="dbplyr.html#cb32-1"></a><span class="kw">table</span>(gss<span class="op">$</span>INCOME)</span>
+<span id="cb32-2"><a href="dbplyr.html#cb32-2"></a><span class="co">#&gt; </span></span>
+<span id="cb32-3"><a href="dbplyr.html#cb32-3"></a><span class="co">#&gt;    1    2    3    4    5    6    7    8    9   10   11   12   13   98 </span></span>
+<span id="cb32-4"><a href="dbplyr.html#cb32-4"></a><span class="co">#&gt;   37   28   19   14   14    9   13   42  142   81  140 1444  274   91</span></span>
+<span id="cb32-5"><a href="dbplyr.html#cb32-5"></a></span>
+<span id="cb32-6"><a href="dbplyr.html#cb32-6"></a><span class="kw">table</span>(gss_db<span class="op">$</span>INCOME)</span>
+<span id="cb32-7"><a href="dbplyr.html#cb32-7"></a><span class="co">#&gt; &lt; table of extent 0 &gt;</span></span></code></pre></div>
+</div>
+<div id="using-dplyr-verbs" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Using dplyr verbs</h3>
+<p>Although we can’t use this object exactly like a normal data frame, dplyr is “database aware” via dbplyr. This means that we can use the standard dplyr verbs (<code>select()</code>, <code>mutate()</code>, <code>group_by()</code>, <code>summarise()</code>, etc.) on our <code>gss_db</code> object to perform processing on the SQL table.</p>
+<p>Instead of immediately processing anything, dplyr builds the operations into a SQL query that will be run on the remote database. We can view the underlying SQL query using <code>show_query()</code>.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="dbplyr.html#cb33-1"></a>income &lt;-<span class="st"> </span>gss_db <span class="op">%&gt;%</span></span>
+<span id="cb33-2"><a href="dbplyr.html#cb33-2"></a><span class="st">  </span><span class="kw">group_by</span>(HELPSICK) <span class="op">%&gt;%</span></span>
+<span id="cb33-3"><a href="dbplyr.html#cb33-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">REALINC_AVG =</span> <span class="kw">mean</span>(REALINC, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb33-4"><a href="dbplyr.html#cb33-4"></a></span>
+<span id="cb33-5"><a href="dbplyr.html#cb33-5"></a><span class="kw">show_query</span>(income)</span>
+<span id="cb33-6"><a href="dbplyr.html#cb33-6"></a><span class="co">#&gt; &lt;SQL&gt;</span></span>
+<span id="cb33-7"><a href="dbplyr.html#cb33-7"></a><span class="co">#&gt; SELECT `HELPSICK`, AVG(`REALINC`) AS `REALINC_AVG`</span></span>
+<span id="cb33-8"><a href="dbplyr.html#cb33-8"></a><span class="co">#&gt; FROM `gss`</span></span>
+<span id="cb33-9"><a href="dbplyr.html#cb33-9"></a><span class="co">#&gt; GROUP BY `HELPSICK`</span></span></code></pre></div>
+<p>At this point we still haven’t really done any processing. Similar to the <code>gss_db</code> object, the <code>income</code> object we just created isn’t actually a data frame, but a “lazy query” that stores definitional data prior to processing. When we print the object, it presents a preview of the results.</p>
+<p>To run the query we call the <code>collect()</code> function, which returns the results as a standard local tibble.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="dbplyr.html#cb34-1"></a><span class="co"># Note that this prints as a &quot;lazy query&quot;</span></span>
+<span id="cb34-2"><a href="dbplyr.html#cb34-2"></a>income</span>
+<span id="cb34-3"><a href="dbplyr.html#cb34-3"></a><span class="co">#&gt; # Source:   lazy query [?? x 2]</span></span>
+<span id="cb34-4"><a href="dbplyr.html#cb34-4"></a><span class="co">#&gt; # Database: sqlite 3.33.0 [:memory:]</span></span>
+<span id="cb34-5"><a href="dbplyr.html#cb34-5"></a><span class="co">#&gt;   HELPSICK REALINC_AVG</span></span>
+<span id="cb34-6"><a href="dbplyr.html#cb34-6"></a><span class="co">#&gt;      &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb34-7"><a href="dbplyr.html#cb34-7"></a><span class="co">#&gt; 1        0      30993.</span></span>
+<span id="cb34-8"><a href="dbplyr.html#cb34-8"></a><span class="co">#&gt; 2        1      25532.</span></span>
+<span id="cb34-9"><a href="dbplyr.html#cb34-9"></a><span class="co">#&gt; 3        2      35434.</span></span>
+<span id="cb34-10"><a href="dbplyr.html#cb34-10"></a><span class="co">#&gt; 4        3      32190.</span></span>
+<span id="cb34-11"><a href="dbplyr.html#cb34-11"></a><span class="co">#&gt; 5        4      41244.</span></span>
+<span id="cb34-12"><a href="dbplyr.html#cb34-12"></a><span class="co">#&gt; 6        5      30856.</span></span>
+<span id="cb34-13"><a href="dbplyr.html#cb34-13"></a><span class="co">#&gt; 7        8      17339.</span></span>
+<span id="cb34-14"><a href="dbplyr.html#cb34-14"></a><span class="co">#&gt; 8        9      26389.</span></span>
+<span id="cb34-15"><a href="dbplyr.html#cb34-15"></a></span>
+<span id="cb34-16"><a href="dbplyr.html#cb34-16"></a><span class="kw">collect</span>(income)</span>
+<span id="cb34-17"><a href="dbplyr.html#cb34-17"></a><span class="co">#&gt; # A tibble: 8 x 2</span></span>
+<span id="cb34-18"><a href="dbplyr.html#cb34-18"></a><span class="co">#&gt;   HELPSICK REALINC_AVG</span></span>
+<span id="cb34-19"><a href="dbplyr.html#cb34-19"></a><span class="co">#&gt;      &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb34-20"><a href="dbplyr.html#cb34-20"></a><span class="co">#&gt; 1        0      30993.</span></span>
+<span id="cb34-21"><a href="dbplyr.html#cb34-21"></a><span class="co">#&gt; 2        1      25532.</span></span>
+<span id="cb34-22"><a href="dbplyr.html#cb34-22"></a><span class="co">#&gt; 3        2      35434.</span></span>
+<span id="cb34-23"><a href="dbplyr.html#cb34-23"></a><span class="co">#&gt; 4        3      32190.</span></span>
+<span id="cb34-24"><a href="dbplyr.html#cb34-24"></a><span class="co">#&gt; 5        4      41244.</span></span>
+<span id="cb34-25"><a href="dbplyr.html#cb34-25"></a><span class="co">#&gt; 6        5      30856.</span></span>
+<span id="cb34-26"><a href="dbplyr.html#cb34-26"></a><span class="co">#&gt; 7        8      17339.</span></span>
+<span id="cb34-27"><a href="dbplyr.html#cb34-27"></a><span class="co">#&gt; 8        9      26389.</span></span></code></pre></div>
+<p>Not all functions can be translated to SQL, and not all processing can be done using dplyr verbs. By using the <code>collect()</code> function in a pipe we can easily combine remote and local processing in a familiar R native way.</p>
+<p>This is particularly powerful when working with large datasets that may not be possible to load into memory in R - every operation before the <code>collect()</code> is processed by the SQL database, so operations like selecting, filtering and aggregating can take advantage of the SQL infrastructure.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="dbplyr.html#cb35-1"></a><span class="kw">library</span>(tidyr)</span>
+<span id="cb35-2"><a href="dbplyr.html#cb35-2"></a></span>
+<span id="cb35-3"><a href="dbplyr.html#cb35-3"></a>gss_db <span class="op">%&gt;%</span></span>
+<span id="cb35-4"><a href="dbplyr.html#cb35-4"></a><span class="st">  </span><span class="kw">group_by</span>(HELPSICK, HEALTH) <span class="op">%&gt;%</span></span>
+<span id="cb35-5"><a href="dbplyr.html#cb35-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">N =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb35-6"><a href="dbplyr.html#cb35-6"></a><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span></span>
+<span id="cb35-7"><a href="dbplyr.html#cb35-7"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;HEALTH&quot;</span>, <span class="dt">names_sort =</span> <span class="ot">TRUE</span>, <span class="dt">values_from =</span> <span class="st">&quot;N&quot;</span>)</span>
+<span id="cb35-8"><a href="dbplyr.html#cb35-8"></a><span class="co">#&gt; # A tibble: 8 x 7</span></span>
+<span id="cb35-9"><a href="dbplyr.html#cb35-9"></a><span class="co">#&gt; # Groups:   HELPSICK [8]</span></span>
+<span id="cb35-10"><a href="dbplyr.html#cb35-10"></a><span class="co">#&gt;   HELPSICK   `0`   `1`   `2`   `3`   `4`   `8`</span></span>
+<span id="cb35-11"><a href="dbplyr.html#cb35-11"></a><span class="co">#&gt;      &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb35-12"><a href="dbplyr.html#cb35-12"></a><span class="co">#&gt; 1        0    NA   177   391   171    45     1</span></span>
+<span id="cb35-13"><a href="dbplyr.html#cb35-13"></a><span class="co">#&gt; 2        1   250    52   132    73    20     1</span></span>
+<span id="cb35-14"><a href="dbplyr.html#cb35-14"></a><span class="co">#&gt; 3        2   138    44    79    40     5    NA</span></span>
+<span id="cb35-15"><a href="dbplyr.html#cb35-15"></a><span class="co">#&gt; 4        3   242    56   101    44     3     2</span></span>
+<span id="cb35-16"><a href="dbplyr.html#cb35-16"></a><span class="co">#&gt; 5        4    62    17    34    12     4    NA</span></span>
+<span id="cb35-17"><a href="dbplyr.html#cb35-17"></a><span class="co">#&gt; 6        5    63     9    28    10     7    NA</span></span>
+<span id="cb35-18"><a href="dbplyr.html#cb35-18"></a><span class="co">#&gt; 7        8    19     4     6     3    NA     1</span></span>
+<span id="cb35-19"><a href="dbplyr.html#cb35-19"></a><span class="co">#&gt; 8        9    NA    NA    NA     2    NA    NA</span></span></code></pre></div>
+</div>
+<div id="disclaimer" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> Disclaimer</h3>
+<p>There’s one big caveat to this approach - it’s not always possible to translate functions to SQL code, and some SQL backends are more robust than others. For simple operations you shouldn’t have any problems, but we highly recommend reading the dbplyr vignettes for a better understanding of how this translation works.</p>
+<ul>
+<li><p><a href="https://dbplyr.tidyverse.org/articles/translation-function.html">Function translation</a></p></li>
+<li><p><a href="https://dbplyr.tidyverse.org/articles/translation-verb.html">Verb translation</a></p></li>
+</ul>
+<p>If you’re having strange issues preforming certain operations, using the <code>show_query()</code> command to see what dbplyr is actually trying to do is the best first debugging step.</p>
+
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dbi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="online-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/socialresearchcentre/r_survey_datasets/edit/main/04-databases.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/socialresearchcentre/r_survey_datasets/blob/main/04-databases.Rmd",
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
