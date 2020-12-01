@@ -1,27 +1,95 @@
 
 # Accessing databases
 
-There are many ways to access databases from R, but we'll be focusing on [DBI](https://dbi.r-dbi.org/) and [dbplyr](https://dbplyr.tidyverse.org/)
+Aside from static datasets, we often need to access data held in various kinds of SQL database in R.
 
-First, we'll create an sqlite database in memory from the `gss` dataset. Note that this will lose all the label metadata, since SQL tables do not support this kind of metadata tagging.
+Exporting data adds an unnecessary overhead, so it's usually desirable to read data from the database directly. There are many ways to access databases from R using traditional SQL queries, but we'll be focusing on using [dbplyr](https://dbplyr.tidyverse.org/), and by extension [DBI](https://dbi.r-dbi.org/), which allows us to use database tables with dplyr as if they were a standard data frame.
+
+## DBI
+
+Before going into the details of dbplyr, we should briefly explain the [DBI](https://dbi.r-dbi.org/) package. This is just an overview - we'll see a basic example of working with DBI in the next section.
+
+DBI is a generic database access package allowing you to perform most common database operations from R. If you've used database packages like [RODBC](https://cran.r-project.org/package=RODBC) the general approach should be familiar.
+
+DBI's big strength is that it can connect to many different database types using "database backends" that are provided by separate R packages. A few examples are:
+
+* [RPostgres](https://rpostgres.r-dbi.org/) for PostgreSQL
+* [RMariaDB](https://rmariadb.r-dbi.org/) for MariaDB or MySQL
+* [RSQLite](https://rsqlite.r-dbi.org/) for SQLite
+* [odbc](https://github.com/r-dbi/odbc) for databases that you can access via ODBC (commonly use for MS SQL Server)
+* [bigrquery](https://github.com/r-dbi/bigrquery) for Google BigQuery
+
+These backend packages handle the translation of the standard DBI functions (e.g. running queries, creating and updating tables) to lower level interaction with the database, taking account of any differences in the database implementation and removing these from the view of the user.
+
+This means that we can use the same set of functions for many backends. If, for example, we moved our database from a PostgreSQL server to MariaDB we could continue to use the same R code while simply changing the connection settings.
+
+A full overview of working with database connections is out of the scope of this book. We would recommend the RStudio [Databases using R](https://db.rstudio.com) guide and the [DBI documentation](https://dbi.r-dbi.org/) as a starting point for connecting to your database of choice.
+
+## dbplyr
+
+dbplyr is an extension package for dplyr that allows us to access database tables _as if they were R data frames_. This essentially means we can access a database without directly bulding SQL queries in our code, which can make working with database tables much cleaner and easier to follow.
+
+There are some simple examples below to give you the gist, but for a more detailed rundown we'd recommend the [Introduction to dbplyr](https://dbplyr.tidyverse.org/articles/dbplyr.html) vignette.
+
+### Accessing the database
+
+Since these examples are intended for public consumption we can't use a "real" external database. Fortunately, since DBI is a generic frontend we can use any backend for demonstration purposes.
+
+First, we'll create an [SQLite](https://sqlite.org/index.html) database in memory from the `gss` dataset. Note that this will lose all the label metadata, since SQL tables do not support attributes or extended R classes.
+
+If you're using a different type of database, the `dbConnect()` call will look a bit different - this function specifies the driver and connection parameters for the database we're connecting to.
+
+```{r}
+gss <- haven::read_sav("data/gss/GSS2018.sav", user_na = TRUE)
+
+# Connect to a temporary SQLite database in memory
+con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+
+# Write the gss dataset to a new table "gss" in the database
+DBI::dbListTables(con)
+DBI::dbWriteTable(con, "gss", gss)
+DBI::dbListTables(con)
+```
+
+dplyr allows us to reference a database table as a tibble using the `tbl()` function. Once we're connected to a database, it's simple to create a reference to a SQL table with the `tbl()` function, using this database connection and the name of the table.
+
+Since a DBI connection (our `con` object) is used in the `tbl()` function, dplyr knows to use the database functionality provided by dbplyr and DBI to access this data.
 
 ```{r}
 library(dplyr, warn.conflicts = FALSE)
 
-gss <- haven::read_sav("data/gss/GSS2018.sav", user_na = TRUE)
-
-con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-copy_to(con, gss)
-```
-
-Referencing a SQL table.
-
-```{r}
 gss_db <- tbl(con, "gss")
 gss_db
 ```
 
+On first glance `gss_db` acts and looks like a tibble, but it's actually quite different. You'll notice in the example above that the data source is listed in the header, but with an unknown (`??`) number of rows:
 
+```r
+# Source:   table<gss> [?? x 1,065]
+# Database: sqlite 3.33.0 [:memory:]
+```
+
+The `gss_db` object is not actually a data frame, but a database connection that pretends to be one. If we look at the class list we'll see that the original `gss` dataset is a data frame underneath the tibble, but our database connection is something else.
+
+```{r}
+class(gss)
+
+class(gss_db)
+```
+
+So although our `gss_db` object looks like a data frame, it isn't one. Operations that you can run on a normal data frame won't necessarily work on a database tibble.
+
+```{r}
+table(gss$INCOME)
+
+table(gss_db$INCOME)
+```
+
+### Using dplyr verbs
+
+Although we can't use this object exactly like a normal data frame, dplyr is "database aware" via dbplyr. This means that we can use the standard dplyr verbs (`select()`, `mutate()`, `group_by()`, `summarise()`, etc.) on our `gss_db` object to perform processing on the SQL table.
+
+Instead of immediately processing anything, dplyr builds the operations into a SQL query that will be run on the remote database. We can view the underlying SQL query using `show_query()`.
 
 ```{r}
 income <- gss_db %>%
@@ -29,11 +97,22 @@ income <- gss_db %>%
   summarise(REALINC_AVG = mean(REALINC, na.rm = TRUE))
 
 show_query(income)
+```
+
+At this point we still haven't really done any processing. Similar to the `gss_db` object, the `income` object we just created isn't actually a data frame, but a "lazy query" that stores definitional data prior to processing. When we print the object, it presents a preview of the results.
+
+To run the query we call the `collect()` function, which returns the results as a standard local tibble.
+
+```{r}
+# Note that this prints as a "lazy query"
+income
 
 collect(income)
 ```
 
-Using hybrid SQL/R workflows in pipes.
+Not all functions can be translated to SQL, and not all processing can be done using dplyr verbs. By using the `collect()` function in a pipe we can easily combine remote and local processing in a familiar R native way.
+
+This is particularly powerful when working with large datasets that may not be possible to load into memory in R - every operation before the `collect()` is processed by the SQL database, so operations like selecting, filtering and aggregating can take advantage of the SQL infrastructure.
 
 ```{r}
 library(tidyr)
@@ -43,4 +122,18 @@ gss_db %>%
   summarise(N = n()) %>%
   collect() %>%
   pivot_wider(names_from = "HEALTH", names_sort = TRUE, values_from = "N")
+```
+
+### Disclaimer
+
+There's one big caveat to this approach - it's not always possible to translate functions to SQL code, and some SQL backends are more robust than others. For simple operations you shouldn't have any problems, but we highly recommend reading the dbplyr vignettes for a better understanding of how this translation works.
+
+* [Function translation](https://dbplyr.tidyverse.org/articles/translation-function.html)
+
+* [Verb translation](https://dbplyr.tidyverse.org/articles/translation-verb.html)
+
+If you're having strange issues preforming certain operations, using the `show_query()` command to see what dbplyr is actually trying to do is the best first debugging step.
+
+```{r, include=FALSE}
+DBI::dbDisconnect(con)
 ```
